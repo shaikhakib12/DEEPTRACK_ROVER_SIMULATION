@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "author": "SIH 2026 Mine Rescue Rover Team",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-led", "id": "led_fwd", "top": -100, "left": 120, "attrs": { "color": "green", "label": "FWD Activity" } },
+    { "type": "wokwi-resistor", "id": "r_fwd", "top": -50, "left": 120, "attrs": { "resistance": "220" } },
+    { "type": "wokwi-led", "id": "led_hb", "top": -100, "left": 200, "attrs": { "color": "yellow", "label": "Heartbeat" } },
+    { "type": "wokwi-resistor", "id": "r_hb", "top": -50, "left": 200, "attrs": { "resistance": "220" } },
+    { "type": "wokwi-led", "id": "led_fault", "top": -100, "left": 280, "attrs": { "color": "red", "label": "Drop / Fault" } },
+    { "type": "wokwi-resistor", "id": "r_fault", "top": -50, "left": 280, "attrs": { "resistance": "220" } },
+    { "type": "wokwi-pushbutton", "id": "btn_fault", "top": 150, "left": 180, "attrs": { "color": "red", "label": "Toggle Fault" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:2", "r_fwd:1", "green", [] ],
+    [ "r_fwd:2", "led_fwd:A", "green", [] ],
+    [ "led_fwd:C", "esp:GND.1", "black", [] ],
+    [ "esp:4", "r_hb:1", "gold", [] ],
+    [ "r_hb:2", "led_hb:A", "gold", [] ],
+    [ "led_hb:C", "esp:GND.1", "black", [] ],
+    [ "esp:5", "r_fault:1", "red", [] ],
+    [ "r_fault:2", "led_fault:A", "red", [] ],
+    [ "led_fault:C", "esp:GND.1", "black", [] ],
+    [ "btn_fault:1.l", "esp:32", "red", [] ],
+    [ "btn_fault:2.l", "esp:GND.1", "black", [] ]
+  ],
+  "dependencies": {}
+}

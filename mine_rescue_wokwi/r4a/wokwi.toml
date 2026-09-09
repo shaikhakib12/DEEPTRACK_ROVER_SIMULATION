@@ -1,0 +1,4 @@
+[wokwi]
+version = 1
+firmware = "../../build/r4a/firmware.bin"
+elf = "../../build/r4a/firmware.elf"

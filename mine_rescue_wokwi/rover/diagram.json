@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "author": "SIH 2026 Mine Rescue Rover Team",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -4.2, "left": -24.4, "attrs": {} },
+    { "type": "wokwi-led", "id": "led_tx", "top": -120, "left": 130, "attrs": { "color": "green", "label": "TX / Heartbeat" } },
+    { "type": "wokwi-resistor", "id": "r_tx", "top": -70, "left": 130, "attrs": { "resistance": "220" } },
+    { "type": "wokwi-led", "id": "led_alert", "top": -120, "left": 210, "attrs": { "color": "red", "label": "EMERGENCY ALERT" } },
+    { "type": "wokwi-resistor", "id": "r_alert", "top": -70, "left": 210, "attrs": { "resistance": "220" } },
+    { "type": "wokwi-potentiometer", "id": "pot_gas", "top": 120, "left": -220, "attrs": { "label": "Methane (%LEL)" } },
+    { "type": "wokwi-potentiometer", "id": "pot_env", "top": 240, "left": -220, "attrs": { "label": "Temp / Humidity" } },
+    { "type": "wokwi-pushbutton", "id": "btn_water", "top": 130, "left": 180, "attrs": { "color": "blue", "label": "Water Flood" } },
+    { "type": "wokwi-pushbutton", "id": "btn_person", "top": 240, "left": 180, "attrs": { "color": "yellow", "label": "Person / SOS" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:2", "r_tx:1", "green", [] ],
+    [ "r_tx:2", "led_tx:A", "green", [] ],
+    [ "led_tx:C", "esp:GND.1", "black", [] ],
+    [ "esp:4", "r_alert:1", "red", [] ],
+    [ "r_alert:2", "led_alert:A", "red", [] ],
+    [ "led_alert:C", "esp:GND.1", "black", [] ],
+    [ "pot_gas:VCC", "esp:3V3", "red", [] ],
+    [ "pot_gas:GND", "esp:GND.2", "black", [] ],
+    [ "pot_gas:SIG", "esp:34", "gold", [] ],
+    [ "pot_env:VCC", "esp:3V3", "red", [] ],
+    [ "pot_env:GND", "esp:GND.2", "black", [] ],
+    [ "pot_env:SIG", "esp:35", "orange", [] ],
+    [ "btn_water:1.l", "esp:32", "blue", [] ],
+    [ "btn_water:2.l", "esp:GND.1", "black", [] ],
+    [ "btn_person:1.l", "esp:33", "yellow", [] ],
+    [ "btn_person:2.l", "esp:GND.1", "black", [] ]
+  ],
+  "dependencies": {}
+}

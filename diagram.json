@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "author": "SIH 2026 Mine Rescue Rover Team",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-led", "id": "led_rx", "top": -100, "left": 120, "attrs": { "color": "green", "label": "RX Packet Active" } },
+    { "type": "wokwi-resistor", "id": "r_rx", "top": -50, "left": 120, "attrs": { "resistance": "220" } },
+    { "type": "wokwi-led", "id": "led_alert", "top": -100, "left": 220, "attrs": { "color": "red", "label": "EMERGENCY ALARM" } },
+    { "type": "wokwi-resistor", "id": "r_alert", "top": -50, "left": 220, "attrs": { "resistance": "220" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:2", "r_rx:1", "green", [] ],
+    [ "r_rx:2", "led_rx:A", "green", [] ],
+    [ "led_rx:C", "esp:GND.1", "black", [] ],
+    [ "esp:4", "r_alert:1", "red", [] ],
+    [ "r_alert:2", "led_alert:A", "red", [] ],
+    [ "led_alert:C", "esp:GND.1", "black", [] ]
+  ],
+  "dependencies": {}
+}
