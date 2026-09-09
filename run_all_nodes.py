@@ -50,6 +50,13 @@ sensor_overrides = {
     "person": False
 }
 
+# Configurable Environment Sensor Thresholds (Controlled from Terminal)
+sensor_thresholds = {
+    "methane_max": 25.0,     # Alert when CH4 >= 25% LEL
+    "temp_max": 38.0,        # Alert when Temp >= 38°C
+    "humidity_max": 85.0     # Alert when Humidity >= 85%
+}
+
 alarm_sound_enabled = True
 
 def play_alarm_beep():
@@ -217,9 +224,10 @@ def print_status_box():
     sound_state = f"{GREEN}ENABLED (SIREN ON){RESET}" if alarm_sound_enabled else f"{RED}MUTED{RESET}"
 
     print(f"  {BOLD}SENSOR SIMULATION:{RESET} Methane: {gas_state} | Water: {water_state} | AI: {person_state}")
+    print(f"  {BOLD}SAFETY THRESHOLDS:{RESET} CH4 Alert: {YELLOW}>={sensor_thresholds['methane_max']}% LEL{RESET} (Keys: {CYAN}[{RESET}/{CYAN}]{RESET}) | Temp Alert: {YELLOW}>={sensor_thresholds['temp_max']}°C{RESET} (Keys: {CYAN}<{RESET}/{CYAN}>{RESET})")
     print(f"  {BOLD}AUDIO ALARM SYSTEM:{RESET} {sound_state}")
     print("="*70)
-    print(f"  Hotkeys: {CYAN}1-8{RESET}=Toggle Node | {YELLOW}m{RESET}=Methane | {BLUE}w{RESET}=Water | {MAGENTA}p{RESET}=Person | {RED}a{RESET}=Sound Siren | {GREEN}r{RESET}=Restore All | {RED}q{RESET}=Quit")
+    print(f"  Hotkeys: {CYAN}1-8{RESET}=Nodes | {YELLOW}m{RESET}=CH4 | {BLUE}w{RESET}=Water | {MAGENTA}p{RESET}=PIR | {CYAN}[{RESET}/{CYAN}]{RESET}=CH4 Limit | {CYAN}<{RESET}/{CYAN}>{RESET}=Temp Limit | {RED}a{RESET}=Siren | {GREEN}r{RESET}=Reset | {RED}q{RESET}=Quit")
     print("="*70 + "\n")
 
 def telemetry_broadcast_loop():
@@ -239,13 +247,13 @@ def telemetry_broadcast_loop():
             methane_status = "ALERT"
         else:
             methane = round(16.5 + random.uniform(-1.2, 1.8), 1)
-            methane_status = "NORMAL"
+            methane_status = "ALERT" if methane >= sensor_thresholds["methane_max"] else "NORMAL"
 
         temp = round(29.2 + random.uniform(-0.4, 0.8), 1)
         humidity = round(65.0 + random.uniform(-2, 2), 0)
         water = 1 if sensor_overrides["water"] else 0
         person = 1 if sensor_overrides["person"] else 0
-        alert = 1 if (methane >= 25.0 or water == 1 or person == 1) else 0
+        alert = 1 if (methane >= sensor_thresholds["methane_max"] or temp >= sensor_thresholds["temp_max"] or water == 1 or person == 1) else 0
 
         # Calculate optimal shortest path at this exact millisecond
         active_path = find_shortest_path("ROVER", "GATEWAY")
@@ -267,7 +275,11 @@ def telemetry_broadcast_loop():
                 "battery": battery_pct,
                 "alert": alert,
                 "path": path_str,
-                "hops": hops
+                "hops": hops,
+                "thresholds": {
+                    "methane_max": sensor_thresholds["methane_max"],
+                    "temp_max": sensor_thresholds["temp_max"]
+                }
             }
 
             json_str = json.dumps(packet)
@@ -367,12 +379,30 @@ def main():
                             play_alarm_beep()
                         print_status_box()
 
+                    elif key == '[':
+                        sensor_thresholds["methane_max"] = max(10.0, round(sensor_thresholds["methane_max"] - 2.5, 1))
+                        print_status_box()
+
+                    elif key == ']':
+                        sensor_thresholds["methane_max"] = min(60.0, round(sensor_thresholds["methane_max"] + 2.5, 1))
+                        print_status_box()
+
+                    elif key in ('<', ','):
+                        sensor_thresholds["temp_max"] = max(25.0, round(sensor_thresholds["temp_max"] - 1.0, 1))
+                        print_status_box()
+
+                    elif key in ('>', '.'):
+                        sensor_thresholds["temp_max"] = min(60.0, round(sensor_thresholds["temp_max"] + 1.0, 1))
+                        print_status_box()
+
                     elif key == 'r':
                         for k in node_status:
                             node_status[k] = True
                         sensor_overrides["methane"] = False
                         sensor_overrides["water"] = False
                         sensor_overrides["person"] = False
+                        sensor_thresholds["methane_max"] = 25.0
+                        sensor_thresholds["temp_max"] = 38.0
                         broadcast_health_to_mqtt()
                         print_status_box()
 
@@ -407,12 +437,26 @@ def main():
                     if alarm_sound_enabled:
                         play_alarm_beep()
                     print_status_box()
+                elif key == '[':
+                    sensor_thresholds["methane_max"] = max(10.0, round(sensor_thresholds["methane_max"] - 2.5, 1))
+                    print_status_box()
+                elif key == ']':
+                    sensor_thresholds["methane_max"] = min(60.0, round(sensor_thresholds["methane_max"] + 2.5, 1))
+                    print_status_box()
+                elif key in ('<', ','):
+                    sensor_thresholds["temp_max"] = max(25.0, round(sensor_thresholds["temp_max"] - 1.0, 1))
+                    print_status_box()
+                elif key in ('>', '.'):
+                    sensor_thresholds["temp_max"] = min(60.0, round(sensor_thresholds["temp_max"] + 1.0, 1))
+                    print_status_box()
                 elif key == 'r':
                     for k in node_status:
                         node_status[k] = True
                     sensor_overrides["methane"] = False
                     sensor_overrides["water"] = False
                     sensor_overrides["person"] = False
+                    sensor_thresholds["methane_max"] = 25.0
+                    sensor_thresholds["temp_max"] = 38.0
                     broadcast_health_to_mqtt()
                     print_status_box()
                 elif key == 's':

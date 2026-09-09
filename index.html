@@ -268,13 +268,53 @@
 
     svg#tunnelSvg {
       width: 100%;
-      height: 250px;
+      height: 460px;
+      display: block;
+      user-select: none;
+      background: #030816;
+      border-radius: 12px;
+      border: 1.5px solid #0284c7;
+      box-shadow: inset 0 0 40px rgba(2, 132, 199, 0.15), 0 8px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Interactive Map Mode Cursors */
+    .add-mode-active svg#tunnelSvg {
+      cursor: cell !important;
+    }
+    .delete-mode-active svg#tunnelSvg .tunnel-node-group {
+      cursor: pointer !important;
+    }
+    .delete-mode-active svg#tunnelSvg .tunnel-node-group:hover .node-outer-ring {
+      fill: #dc2626 !important;
+      stroke: #f87171 !important;
+      filter: drop-shadow(0 0 14px rgba(239, 68, 68, 1)) !important;
     }
 
     .tunnel-rock-bg {
-      fill: #0c121e;
-      stroke: #1e293b;
+      fill: #030816;
+      stroke: #0284c7;
+      stroke-width: 2;
+    }
+
+    /* Blueprint Chamber & Feature Styling */
+    .blueprint-chamber {
+      fill: rgba(2, 132, 199, 0.06);
+      stroke: rgba(56, 189, 248, 0.4);
       stroke-width: 1.5;
+    }
+
+    .blueprint-pillar {
+      fill: #071329;
+      stroke: #0284c7;
+      stroke-width: 1.5;
+    }
+
+    .blueprint-text {
+      font-family: 'Consolas', 'Courier New', monospace;
+      fill: #38bdf8;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
     /* Mesh Wires with Animated Particle Laser Stream */
@@ -624,195 +664,186 @@
 
   <div class="dashboard-grid">
 
-    <!-- Subterranean Mine Mesh Topology & Shortest Path Optimizer -->
-    <div class="glass-card col-8">
+    <!-- Subterranean Mine Mesh Topology & Shortest Path Optimizer (Centered & Full-Width) -->
+    <div class="glass-card col-12" style="margin-bottom: 6px;">
       <div class="card-header">
-        <span class="card-title">
-          <span>⚡ Subterranean Mesh Topology & Shortest-Route Optimizer</span>
-        </span>
-        <span class="card-subtitle-badge" style="color: #38bdf8;">CLICK ANY NODE TO TOGGLE POWER</span>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <span class="card-title">
+            <span>🗺️ Subterranean Mine Blueprint & Interactive Rover Radar Map</span>
+          </span>
+          <span id="roverCoordsBadge" class="card-subtitle-badge" style="color: #38bdf8; font-family: monospace;">🚜 ROVER: (X: 95m, Y: 225m)</span>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <button id="btnAddRelay" onclick="toggleAddMode()" style="background: rgba(56, 189, 248, 0.2); border: 1px solid var(--cyan-glow); color: var(--cyan-glow); padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s;">
+            <span>➕</span> <span id="btnAddText">ADD RELAY NODE</span>
+          </button>
+          <button id="btnDeleteMode" onclick="toggleDeleteMode()" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: var(--neon-red); padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; cursor: pointer; transition: all 0.2s;">
+            🗑️ DELETE RELAY MODE: OFF
+          </button>
+          <button onclick="restoreDefaultBlueprint()" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #7dd3fc; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; cursor: pointer;">
+            🔄 RESET NODES
+          </button>
+          <button onclick="restoreAllNodes()" style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; cursor: pointer;">
+            ⚡ ALL ON
+          </button>
+        </div>
       </div>
 
-      <div class="tunnel-view-container" style="position: relative;">
+      <div class="tunnel-view-container" id="mapContainerWrapper" style="position: relative;">
         <!-- Live Shortest Route & Driving Controls Banner -->
         <div class="routing-info-bar">
-          <div>
+          <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
             <span>SHORTEST PATH: </span>
             <span class="route-text" id="routeTextBanner">ROVER ➔ R1A ➔ R2 ➔ R4A ➔ GATEWAY</span>
           </div>
-          <div style="display: flex; gap: 16px; align-items: center;">
-            <span style="color: #38bdf8; font-size: 0.72rem; font-weight: 700;">🎮 MOVE ROVER: ARROWS / WASD</span>
+          <div style="display: flex; gap: 16px; align-items: center; flex-shrink: 0;">
+            <span id="mapInstructionLabel" style="color: #38bdf8; font-size: 0.72rem; font-weight: 700;">🎮 MOVE ROVER: ARROWS / WASD / CLICK TO DRIVE / DRAG</span>
             <div class="route-metric" id="routeMetricBanner">4 Hops | Latency: 96ms</div>
           </div>
         </div>
 
-        <svg id="tunnelSvg" viewBox="0 0 850 260" style="outline: none;" tabindex="0">
-          <!-- Mine Tunnel Shaft Background Grid & Hazards -->
-          <rect x="15" y="20" width="820" height="220" rx="14" class="tunnel-rock-bg" />
-          
-          <!-- Cave grid dots -->
-          <pattern id="mineGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <circle cx="20" cy="20" r="1" fill="rgba(56, 189, 248, 0.15)" />
-          </pattern>
-          <rect x="15" y="20" width="820" height="220" rx="14" fill="url(#mineGrid)" pointer-events="none" />
+        <svg id="tunnelSvg" viewBox="0 0 1000 450" style="outline: none;" tabindex="0">
+          <defs>
+            <!-- Blueprint Fine Grid (20x20) -->
+            <pattern id="blueprintGridFine" width="20" height="20" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="20" x2="20" y2="20" stroke="rgba(2, 132, 199, 0.12)" stroke-width="0.5" />
+              <line x1="20" y1="0" x2="20" y2="20" stroke="rgba(2, 132, 199, 0.12)" stroke-width="0.5" />
+            </pattern>
 
-          <text x="35" y="45" fill="#475569" font-size="10" font-family="monospace">◄ SECTOR 4-B (DEPTH: 180m) [MINE WALL]</text>
-          <text x="690" y="45" fill="#475569" font-size="10" font-family="monospace">SURFACE PITHEAD SHAFT ►</text>
+            <!-- Blueprint Major Grid (100x100) -->
+            <pattern id="blueprintGridMajor" width="100" height="100" patternUnits="userSpaceOnUse">
+              <rect width="100" height="100" fill="url(#blueprintGridFine)" />
+              <line x1="0" y1="100" x2="100" y2="100" stroke="rgba(0, 240, 255, 0.22)" stroke-width="1" />
+              <line x1="100" y1="0" x2="100" y2="100" stroke="rgba(0, 240, 255, 0.22)" stroke-width="1" />
+              <circle cx="100" cy="100" r="2" fill="rgba(0, 240, 255, 0.4)" />
+            </pattern>
 
-          <!-- ALL MESH WIRES (FULL BIPARTITE & CROSS-CONNECTED TOPOLOGY) -->
-          <!-- Dynamic Rover Proximity Links to all Relays -->
-          <line id="wire-rover-r1a" class="tunnel-wire" x1="100" y1="130" x2="250" y2="75" />
-          <line id="wire-rover-r1b" class="tunnel-wire" x1="100" y1="130" x2="250" y2="185" />
-          <line id="wire-rover-r2"  class="tunnel-wire" x1="100" y1="130" x2="420" y2="75" opacity="0.25" />
-          <line id="wire-rover-r3"  class="tunnel-wire" x1="100" y1="130" x2="420" y2="185" opacity="0.25" />
-          <line id="wire-rover-r4a" class="tunnel-wire" x1="100" y1="130" x2="590" y2="75" opacity="0.15" />
-          <line id="wire-rover-r4b" class="tunnel-wire" x1="100" y1="130" x2="590" y2="185" opacity="0.15" />
-          <line id="wire-rover-gateway" class="tunnel-wire" x1="100" y1="130" x2="750" y2="130" opacity="0.1" />
+            <!-- Unmined Bedrock Pillar Diagonal Hatching -->
+            <pattern id="pillarHatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="10" stroke="rgba(2, 132, 199, 0.35)" stroke-width="1.5" />
+            </pattern>
 
-          <!-- Stage 1 to Stage 2: Direct + Full Cross Links (R1A<->R2, R1A<->R3, R1B<->R3, R1B<->R2) -->
-          <line id="wire-r1a-r2" class="tunnel-wire" x1="250" y1="75" x2="420" y2="75" />
-          <line id="wire-r1a-r3" class="tunnel-wire" x1="250" y1="75" x2="420" y2="185" />
-          <line id="wire-r1b-r3" class="tunnel-wire" x1="250" y1="185" x2="420" y2="185" />
-          <line id="wire-r1b-r2" class="tunnel-wire" x1="250" y1="185" x2="420" y2="75" />
+            <pattern id="hazardHatch" width="12" height="12" patternTransform="rotate(-45 0 0)" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="12" stroke="rgba(245, 158, 11, 0.3)" stroke-width="2" />
+            </pattern>
+          </defs>
 
-          <!-- Intermediate Horizontal Redundancy -->
-          <line id="wire-r1a-r1b" class="tunnel-wire" x1="250" y1="75" x2="250" y2="185" opacity="0.35" />
-          <line id="wire-r2-r3"   class="tunnel-wire" x1="420" y1="75" x2="420" y2="185" />
-          <line id="wire-r4a-r4b" class="tunnel-wire" x1="590" y1="75" x2="590" y2="185" opacity="0.35" />
+          <!-- Blueprint Background Foundation -->
+          <rect x="0" y="0" width="1000" height="450" rx="12" fill="#030816" />
+          <rect x="15" y="15" width="970" height="420" rx="8" fill="url(#blueprintGridMajor)" />
 
-          <!-- Stage 2 to Stage 3: Direct + Cross Links (R2<->R4A, R2<->R4B, R3<->R4B, R3<->R4A) -->
-          <line id="wire-r2-r4a" class="tunnel-wire" x1="420" y1="75" x2="590" y2="75" />
-          <line id="wire-r2-r4b" class="tunnel-wire" x1="420" y1="75" x2="590" y2="185" />
-          <line id="wire-r3-r4b" class="tunnel-wire" x1="420" y1="185" x2="590" y2="185" />
-          <line id="wire-r3-r4a" class="tunnel-wire" x1="420" y1="185" x2="590" y2="75" />
+          <!-- Blueprint Mine Outer Tunnel Excavation Contours -->
+          <g id="svgBlueprintExcavations">
+            <!-- Stope 4-B Deep Entry Cave (Far Left Face) -->
+            <rect x="35" y="60" width="150" height="330" rx="10" class="blueprint-chamber" />
+            
+            <!-- Upper Ventilation & Haulage Drift -->
+            <rect x="185" y="60" width="675" height="120" rx="8" class="blueprint-chamber" />
+            
+            <!-- Lower Drainage Sump Drift -->
+            <rect x="185" y="270" width="675" height="120" rx="8" class="blueprint-chamber" />
 
-          <!-- Exit to Gateway -->
-          <line id="wire-r4a-gateway" class="tunnel-wire" x1="590" y1="75" x2="750" y2="130" />
-          <line id="wire-r4b-gateway" class="tunnel-wire" x1="590" y1="185" x2="750" y2="130" />
+            <!-- Vertical Interconnecting Crosscut Shafts -->
+            <rect x="320" y="160" width="60" height="130" class="blueprint-chamber" />
+            <rect x="560" y="160" width="60" height="130" class="blueprint-chamber" />
+            <rect x="760" y="160" width="60" height="130" class="blueprint-chamber" />
 
-          <!-- FIXED RELAY STATIONS -->
-          <!-- ENTRY RELAYS: R1A & R1B -->
-          <g class="tunnel-node-group" id="nodeGroup-R1A" transform="translate(250, 75)" onclick="toggleNodePower('R1A')">
-            <circle class="relay-radar-coverage" r="140" fill="rgba(56, 189, 248, 0.02)" stroke="rgba(56, 189, 248, 0.1)" stroke-dasharray="3 3" />
-            <circle id="nodeRing-R1A" class="node-outer-ring online" r="23" />
-            <text class="node-label-text" y="-4">R1A</text>
-            <text class="node-toggle-subtext" y="9" id="svgSub-R1A">ON</text>
-          </g>
-          <g class="tunnel-node-group" id="nodeGroup-R1B" transform="translate(250, 185)" onclick="toggleNodePower('R1B')">
-            <circle class="relay-radar-coverage" r="140" fill="rgba(56, 189, 248, 0.02)" stroke="rgba(56, 189, 248, 0.1)" stroke-dasharray="3 3" />
-            <circle id="nodeRing-R1B" class="node-outer-ring online" r="23" />
-            <text class="node-label-text" y="-4">R1B</text>
-            <text class="node-toggle-subtext" y="9" id="svgSub-R1B">ON</text>
-          </g>
+            <!-- Solid Bedrock Pillars (Unexcavated Rock Divide) -->
+            <rect x="205" y="180" width="115" height="90" rx="4" class="blueprint-pillar" />
+            <rect x="205" y="180" width="115" height="90" rx="4" fill="url(#pillarHatch)" />
+            <text x="262" y="228" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="9" text-anchor="middle">ROCK PILLAR A</text>
 
-          <!-- MIDDLE CROSS-LINKED RELAYS: R2 & R3 -->
-          <g class="tunnel-node-group" id="nodeGroup-R2" transform="translate(420, 75)" onclick="toggleNodePower('R2')">
-            <circle class="relay-radar-coverage" r="140" fill="rgba(56, 189, 248, 0.02)" stroke="rgba(56, 189, 248, 0.1)" stroke-dasharray="3 3" />
-            <circle id="nodeRing-R2" class="node-outer-ring online" r="23" />
-            <text class="node-label-text" y="-4">R2</text>
-            <text class="node-toggle-subtext" y="9" id="svgSub-R2">ON</text>
-          </g>
-          <g class="tunnel-node-group" id="nodeGroup-R3" transform="translate(420, 185)" onclick="toggleNodePower('R3')">
-            <circle class="relay-radar-coverage" r="140" fill="rgba(56, 189, 248, 0.02)" stroke="rgba(56, 189, 248, 0.1)" stroke-dasharray="3 3" />
-            <circle id="nodeRing-R3" class="node-outer-ring online" r="23" />
-            <text class="node-label-text" y="-4">R3</text>
-            <text class="node-toggle-subtext" y="9" id="svgSub-R3">ON</text>
-          </g>
+            <rect x="380" y="180" width="180" height="90" rx="4" class="blueprint-pillar" />
+            <rect x="380" y="180" width="180" height="90" rx="4" fill="url(#pillarHatch)" />
+            <text x="470" y="228" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="9" text-anchor="middle">ROCK PILLAR B (CENTRAL)</text>
 
-          <!-- EXIT RELAYS: R4A & R4B -->
-          <g class="tunnel-node-group" id="nodeGroup-R4A" transform="translate(590, 75)" onclick="toggleNodePower('R4A')">
-            <circle class="relay-radar-coverage" r="140" fill="rgba(56, 189, 248, 0.02)" stroke="rgba(56, 189, 248, 0.1)" stroke-dasharray="3 3" />
-            <circle id="nodeRing-R4A" class="node-outer-ring online" r="23" />
-            <text class="node-label-text" y="-4">R4A</text>
-            <text class="node-toggle-subtext" y="9" id="svgSub-R4A">ON</text>
-          </g>
-          <g class="tunnel-node-group" id="nodeGroup-R4B" transform="translate(590, 185)" onclick="toggleNodePower('R4B')">
-            <circle class="relay-radar-coverage" r="140" fill="rgba(56, 189, 248, 0.02)" stroke="rgba(56, 189, 248, 0.1)" stroke-dasharray="3 3" />
-            <circle id="nodeRing-R4B" class="node-outer-ring online" r="23" />
-            <text class="node-label-text" y="-4">R4B</text>
-            <text class="node-toggle-subtext" y="9" id="svgSub-R4B">ON</text>
+            <rect x="620" y="180" width="140" height="90" rx="4" class="blueprint-pillar" />
+            <rect x="620" y="180" width="140" height="90" rx="4" fill="url(#pillarHatch)" />
+            <text x="690" y="228" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="9" text-anchor="middle">ROCK PILLAR C</text>
+
+            <!-- Surface Extraction Pithead Hoist Shaft (Gateway Base Station, Far Right) -->
+            <rect x="860" y="90" width="110" height="270" rx="8" fill="rgba(16, 185, 129, 0.05)" stroke="rgba(16, 185, 129, 0.4)" stroke-width="1.5" stroke-dasharray="4 4" />
+            <line x1="915" y1="30" x2="915" y2="90" stroke="#10b981" stroke-width="2" stroke-dasharray="2 2" />
+            <text x="915" y="55" fill="#10b981" font-size="9" font-family="monospace" text-anchor="middle">▲ PITHEAD ELEVATOR (SURFACE)</text>
+
+            <!-- Hazard Warning Overlays on Mine Blueprint -->
+            <!-- Hazard Zone 1: Methane Gas Pocket at Upper North Drift -->
+            <rect x="390" y="70" width="160" height="40" rx="4" fill="url(#hazardHatch)" stroke="rgba(245, 158, 11, 0.5)" stroke-width="1" />
+            <text x="470" y="94" fill="#fbbf24" font-size="8" font-family="monospace" font-weight="bold" text-anchor="middle">⚠️ GAS POCKET (CH4 %LEL RISK)</text>
+
+            <!-- Hazard Zone 2: Flooding Drainage Sump at Lower South Drift -->
+            <rect x="630" y="340" width="140" height="40" rx="4" fill="rgba(6, 182, 212, 0.12)" stroke="rgba(6, 182, 212, 0.5)" stroke-width="1" />
+            <text x="700" y="364" fill="#38bdf8" font-size="8" font-family="monospace" font-weight="bold" text-anchor="middle">🌊 WATER DRAINAGE SUMP</text>
+
+            <!-- Blueprint Drafting Annotations -->
+            <text x="45" y="42" class="blueprint-text" fill="#38bdf8">◄ STOPE 4-B EXTRACTION FACE (DEPTH: 210m)</text>
+            <text x="500" y="42" class="blueprint-text" fill="#0284c7" text-anchor="middle">DWG: SUBTERRANEAN MINE MESH BLUEPRINT [SECTOR 4-B LEVEL]</text>
+            <text x="895" y="42" class="blueprint-text" fill="#10b981" text-anchor="end">SURFACE BASE PITHEAD (0m) ►</text>
+
+            <text x="45" y="415" class="blueprint-text" fill="#64748b">SCALE: 1px = 0.5m | RF FREQ: 868MHz LoRa / ESP-NOW</text>
+            <text x="500" y="415" class="blueprint-text" fill="#64748b" text-anchor="middle">BLUEPRINT REVISION 3.2 | AUTONOMOUS MESH TOPOLOGY</text>
+            <text x="965" y="415" class="blueprint-text" fill="#64748b" text-anchor="end">COORD REF: S4B-GRID</text>
           </g>
 
-          <!-- BASE STATION GATEWAY -->
-          <g class="tunnel-node-group" id="nodeGroup-GATEWAY" transform="translate(750, 130)" onclick="toggleNodePower('GATEWAY')">
-            <circle class="relay-radar-coverage" r="130" fill="rgba(16, 185, 129, 0.03)" stroke="rgba(16, 185, 129, 0.2)" stroke-dasharray="4 4" />
-            <circle id="nodeRing-GATEWAY" class="node-outer-ring online" r="26" />
-            <text class="node-label-text" y="-4">GATEWAY</text>
-            <text class="node-toggle-subtext" y="9" id="svgSub-GATEWAY">ON</text>
-          </g>
+          <!-- Dynamic Inter-Node & Rover Wires Group (Generated by JS) -->
+          <g id="svgWiresGroup"></g>
 
-          <!-- MOBILE ROVER (INTERACTIVE MOVABLE ELEMENT WITH RF RADAR SCANNER) -->
-          <g id="nodeGroup-ROVER" transform="translate(100, 130)" style="cursor: grab;" onclick="toggleNodePower('ROVER')">
-            <!-- Transceiver LoRa Range Bubble -->
-            <circle id="roverRadarRange" r="160" fill="rgba(0, 240, 255, 0.05)" stroke="rgba(0, 240, 255, 0.35)" stroke-dasharray="4 4">
-              <animate attributeName="stroke-dashoffset" from="0" to="24" dur="2s" repeatCount="indefinite" />
+          <!-- Dynamic Relay Node Stations Group (Generated by JS) -->
+          <g id="svgNodesGroup"></g>
+
+          <!-- MOBILE ROVER (DRAGGABLE & NAVIGABLE ELEMENT) -->
+          <g id="nodeGroup-ROVER" transform="translate(95, 225)" style="cursor: grab;" onmousedown="startDragRover(event)">
+            <!-- RF LoRa Radar Scanning Bubble -->
+            <circle id="roverRadarRange" r="210" fill="rgba(0, 240, 255, 0.04)" stroke="rgba(0, 240, 255, 0.35)" stroke-dasharray="5 5">
+              <animate attributeName="stroke-dashoffset" from="0" to="30" dur="2.5s" repeatCount="indefinite" />
             </circle>
-            <!-- Rover Outer Ring -->
-            <circle id="nodeRing-ROVER" class="node-outer-ring online" r="25" />
-            <!-- Animated Tracks / Chassis -->
-            <rect x="-18" y="-18" width="36" height="36" rx="6" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.6" />
-            <text class="node-label-text" y="-4">🚜 ROV</text>
+
+            <!-- Inner Pulse Wave -->
+            <circle r="70" fill="none" stroke="rgba(0, 240, 255, 0.2)" stroke-width="1">
+              <animate attributeName="r" values="25;140;210" dur="3s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.8;0.3;0" dur="3s" repeatCount="indefinite" />
+            </circle>
+
+            <!-- Outer Status Ring -->
+            <circle id="nodeRing-ROVER" class="node-outer-ring online in-path" r="26" />
+            
+            <!-- Rover Heavy Chassis Visual -->
+            <rect x="-18" y="-14" width="36" height="28" rx="5" fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
+            <!-- Left & Right All-Terrain Tread Tracks -->
+            <rect x="-21" y="-16" width="6" height="32" rx="2" fill="#334155" stroke="#38bdf8" stroke-width="1" />
+            <rect x="15" y="-16" width="6" height="32" rx="2" fill="#334155" stroke="#38bdf8" stroke-width="1" />
+            <!-- Headlights Cone Beam -->
+            <polygon points="18,-6 42,-14 42,14 18,6" fill="rgba(254, 240, 138, 0.2)" pointer-events="none" />
+            
+            <text class="node-label-text" y="-2" font-size="10">🚜 ROV</text>
             <text class="node-toggle-subtext" y="9" id="svgSub-ROVER">ON</text>
           </g>
         </svg>
 
-        <!-- On-Screen Virtual D-PAD Controller for Mobile & Quick Testing -->
-        <div style="position: absolute; right: 24px; bottom: 20px; display: grid; grid-template-columns: repeat(3, 34px); gap: 4px; background: rgba(15, 23, 42, 0.85); padding: 6px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); z-index: 10;">
+        <!-- On-Screen Virtual D-PAD Controller for Mobile & Direct Testing -->
+        <div style="position: absolute; right: 28px; bottom: 24px; display: grid; grid-template-columns: repeat(3, 34px); gap: 4px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); padding: 6px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); z-index: 10;">
           <div></div>
-          <button onclick="driveRover(0, -18)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;">▲</button>
+          <button onclick="driveRover(0, -25)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;" title="Drive North">▲</button>
           <div></div>
-          <button onclick="driveRover(-18, 0)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;">◀</button>
-          <button onclick="resetRoverPosition()" title="Reset Rover Position" style="background:#0284c7; color:#fff; border:none; border-radius:6px; height:32px; font-size:10px; font-weight:800; cursor:pointer;">⌂</button>
-          <button onclick="driveRover(18, 0)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;">▶</button>
+          <button onclick="driveRover(-25, 0)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;" title="Drive West">◀</button>
+          <button onclick="resetRoverPosition()" title="Reset Rover to Start" style="background:#0284c7; color:#fff; border:none; border-radius:6px; height:32px; font-size:11px; font-weight:800; cursor:pointer;">⌂</button>
+          <button onclick="driveRover(25, 0)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;" title="Drive East">▶</button>
           <div></div>
-          <button onclick="driveRover(0, 18)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;">▼</button>
+          <button onclick="driveRover(0, 25)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;" title="Drive South">▼</button>
           <div></div>
         </div>
       </div>
 
-      <!-- Node Power Controller Switches (All 8 Nodes ON / OFF Controls) -->
+      <!-- Dynamic Node Power Controller Switches Bar -->
       <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800;">INDIVIDUAL RELAY & NODE POWER CONTROLS:</span>
+        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800;">INDIVIDUAL NODE HARDWARE POWER & RELAY SWITCHES:</span>
         <button onclick="restoreAllNodes()" style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 3px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer;">
           TURN ALL ON
         </button>
       </div>
 
-      <div class="node-switch-grid">
-        <div class="node-toggle-card" onclick="toggleNodePower('ROVER')">
-          <span class="toggle-title">🚜 ROVER</span>
-          <button id="btnPower-ROVER" class="power-switch-btn on">ON</button>
-        </div>
-        <div class="node-toggle-card" onclick="toggleNodePower('R1A')">
-          <span class="toggle-title">R1A (Entry A)</span>
-          <button id="btnPower-R1A" class="power-switch-btn on">ON</button>
-        </div>
-        <div class="node-toggle-card" onclick="toggleNodePower('R1B')">
-          <span class="toggle-title">R1B (Entry B)</span>
-          <button id="btnPower-R1B" class="power-switch-btn on">ON</button>
-        </div>
-        <div class="node-toggle-card" onclick="toggleNodePower('R2')">
-          <span class="toggle-title">R2 (Middle L)</span>
-          <button id="btnPower-R2" class="power-switch-btn on">ON</button>
-        </div>
-
-        <div class="node-toggle-card" onclick="toggleNodePower('R3')">
-          <span class="toggle-title">R3 (Middle R)</span>
-          <button id="btnPower-R3" class="power-switch-btn on">ON</button>
-        </div>
-        <div class="node-toggle-card" onclick="toggleNodePower('R4A')">
-          <span class="toggle-title">R4A (Exit A)</span>
-          <button id="btnPower-R4A" class="power-switch-btn on">ON</button>
-        </div>
-        <div class="node-toggle-card" onclick="toggleNodePower('R4B')">
-          <span class="toggle-title">R4B (Exit B)</span>
-          <button id="btnPower-R4B" class="power-switch-btn on">ON</button>
-        </div>
-        <div class="node-toggle-card" onclick="toggleNodePower('GATEWAY')">
-          <span class="toggle-title">💻 GATEWAY</span>
-          <button id="btnPower-GATEWAY" class="power-switch-btn on">ON</button>
-        </div>
-      </div>
+      <!-- Dynamic Switch Container (Updated automatically when nodes added/deleted) -->
+      <div class="node-switch-grid" id="nodeSwitchGrid"></div>
     </div>
 
     <!-- Atmospheric Sensors & Radial Gauges -->
@@ -928,7 +959,18 @@
     const BROKER_PATH = '/mqtt';
     const CLIENT_ID   = 'MineDashOpt_' + Math.random().toString(16).substring(2, 8);
 
-    // Dynamic Node Power States (All default to TRUE)
+    // --- Subterranean Mine Blueprint & Mesh Engine State ---
+    const DEFAULT_NODES = {
+      R1A:     { x: 250, y: 120, label: "R1A (Vent North)" },
+      R1B:     { x: 250, y: 330, label: "R1B (Sump South)" },
+      R2:      { x: 490, y: 120, label: "R2 (Mid Upper)" },
+      R3:      { x: 490, y: 330, label: "R3 (Mid Lower)" },
+      R4A:     { x: 740, y: 120, label: "R4A (Shaft North)" },
+      R4B:     { x: 740, y: 330, label: "R4B (Shaft South)" },
+      GATEWAY: { x: 915, y: 225, label: "GATEWAY (Pithead)" }
+    };
+
+    let nodeCoords = JSON.parse(JSON.stringify(DEFAULT_NODES));
     let nodePower = {
       ROVER: true,
       R1A: true,
@@ -940,46 +982,49 @@
       GATEWAY: true
     };
 
-    // Fixed Node Map Positions in SVG Coordinates
-    const NODE_COORDS = {
-      R1A:     { x: 250, y: 75 },
-      R1B:     { x: 250, y: 185 },
-      R2:      { x: 420, y: 75 },
-      R3:      { x: 420, y: 185 },
-      R4A:     { x: 590, y: 75 },
-      R4B:     { x: 590, y: 185 },
-      GATEWAY: { x: 750, y: 130 }
-    };
+    // Rover Position & Radio Coverage Specs
+    let roverPos = { x: 95, y: 225 };
+    const ROVER_RADAR_RADIUS = 210; // LoRa RF communication bubble
+    const RELAY_LINK_RADIUS  = 280; // Wireless transmission range between relay nodes
 
-    // Rover Interactive Dynamic Position
-    let roverPos = { x: 100, y: 130 };
-    const ROVER_RADAR_RADIUS = 190; // RF communication threshold distance
+    // Interactive Map Modes
+    let isAddMode = false;
+    let isDeleteMode = false;
+    let isDraggingRover = false;
 
-    // Full Redundant Inter-Relay Mesh Graph (Cross Links & Horizontal bridges)
-    const INTER_RELAY_GRAPH = {
-      R1A: ["R2", "R3", "R1B"],
-      R1B: ["R3", "R2", "R1A"],
-      R2:  ["R4A", "R4B", "R3", "R1A", "R1B"],
-      R3:  ["R4B", "R4A", "R2", "R1B", "R1A"],
-      R4A: ["GATEWAY", "R4B", "R2", "R3"],
-      R4B: ["GATEWAY", "R4A", "R3", "R2"],
-      GATEWAY: []
-    };
+    // Safety Thresholds
+    let currentMethaneThreshold = 25.0;
+    let currentTempThreshold = 38.0;
 
-    // Calculates Euclidean distance between two points
+    // Euclidean distance
     function getDistance(p1, p2) {
       const dx = p1.x - p2.x;
       const dy = p1.y - p2.y;
       return Math.sqrt(dx * dx + dy * dy);
     }
 
-    // Dynamic Graph generator based on Rover's physical position
+    // Dynamic Mesh Graph builder: links any two relays within radio range, and links rover to all relays in range
     function getDynamicMeshGraph() {
-      const graph = JSON.parse(JSON.stringify(INTER_RELAY_GRAPH));
+      const graph = {};
+      const allNodes = Object.keys(nodeCoords);
+      allNodes.forEach(n => graph[n] = []);
       graph.ROVER = [];
 
-      // Find all online relay stations within Rover's RF radar radius
-      for (const [node, pos] of Object.entries(NODE_COORDS)) {
+      // Inter-Relay Wireless Mesh Links (Bidirectional)
+      for (let i = 0; i < allNodes.length; i++) {
+        const n1 = allNodes[i];
+        for (let j = i + 1; j < allNodes.length; j++) {
+          const n2 = allNodes[j];
+          const dist = getDistance(nodeCoords[n1], nodeCoords[n2]);
+          if (dist <= RELAY_LINK_RADIUS) {
+            graph[n1].push(n2);
+            graph[n2].push(n1);
+          }
+        }
+      }
+
+      // Rover dynamic proximity links
+      for (const [node, pos] of Object.entries(nodeCoords)) {
         if (nodePower[node]) {
           const dist = getDistance(roverPos, pos);
           if (dist <= ROVER_RADAR_RADIUS) {
@@ -988,10 +1033,8 @@
         }
       }
 
-      // Sort by physical proximity so closest relay is preferred
-      graph.ROVER.sort((a, b) => {
-        return getDistance(roverPos, NODE_COORDS[a]) - getDistance(roverPos, NODE_COORDS[b]);
-      });
+      // Sort rover connections so closest relay is preferred
+      graph.ROVER.sort((a, b) => getDistance(roverPos, nodeCoords[a]) - getDistance(roverPos, nodeCoords[b]));
 
       return graph;
     }
@@ -1001,7 +1044,7 @@
     let methaneHistory = [];
     const MAX_HISTORY_PTS = 30;
 
-    // --- Shortest-Path Algorithm (Breadth-First Search) ---
+    // Shortest-Path Algorithm (Breadth-First Search)
     function computeShortestRoute(start = "ROVER", end = "GATEWAY") {
       if (!nodePower[start] || !nodePower[end]) return null;
 
@@ -1022,46 +1065,328 @@
           }
         }
       }
-      return null; // Route severed or out of range
+      return null;
     }
 
-    // Move Rover function with boundary checks
-    function driveRover(dx, dy) {
-      roverPos.x = Math.max(45, Math.min(790, roverPos.x + dx));
-      roverPos.y = Math.max(45, Math.min(215, roverPos.y + dy));
-      updateRoverSvgElement();
-      refreshTopologyAndRoute();
-    }
-
-    function resetRoverPosition() {
-      roverPos = { x: 100, y: 130 };
-      updateRoverSvgElement();
-      refreshTopologyAndRoute();
-      appendLog('[ROVER]', 'Rover repositioned to Sector 4-B entry.', 'fwd');
-    }
-
-    function updateRoverSvgElement() {
-      const g = document.getElementById('nodeGroup-ROVER');
-      if (g) {
-        g.setAttribute('transform', `translate(${roverPos.x}, ${roverPos.y})`);
+    // Render All Dynamic Map Elements: Wires, Relay Stations, Rover, HUD, and Switch Cards
+    function renderAllMapElements() {
+      const dynamicGraph = getDynamicMeshGraph();
+      const shortestRoute = computeShortestRoute("ROVER", "GATEWAY");
+      const shortestEdges = new Set();
+      if (shortestRoute) {
+        for (let i = 0; i < shortestRoute.length - 1; i++) {
+          shortestEdges.add(`${shortestRoute[i]}--${shortestRoute[i+1]}`);
+          shortestEdges.add(`${shortestRoute[i+1]}--${shortestRoute[i]}`);
+        }
       }
 
-      // Update dynamic SVG connection wires from Rover to all nodes
-      for (const [node, pos] of Object.entries(NODE_COORDS)) {
-        const line = document.getElementById(`wire-rover-${node.toLowerCase()}`);
-        if (line) {
-          line.setAttribute('x1', roverPos.x);
-          line.setAttribute('y1', roverPos.y);
-          const dist = getDistance(roverPos, pos);
-          // Highlight faint connection line if within RF range
-          line.style.display = (dist <= ROVER_RADAR_RADIUS && nodePower[node]) ? 'block' : 'none';
+      // 1. Dynamic Wires
+      const wiresGroup = document.getElementById('svgWiresGroup');
+      if (wiresGroup) {
+        let wiresHtml = '';
+        const drawnSet = new Set();
+
+        // Inter-relay mesh wires
+        for (const [fromNode, neighbors] of Object.entries(dynamicGraph)) {
+          if (fromNode === 'ROVER') continue;
+          const p1 = nodeCoords[fromNode];
+          if (!p1) continue;
+
+          for (const toNode of neighbors) {
+            if (toNode === 'ROVER') continue;
+            const p2 = nodeCoords[toNode];
+            if (!p2) continue;
+
+            const edgeKey = [fromNode, toNode].sort().join('--');
+            if (drawnSet.has(edgeKey)) continue;
+            drawnSet.add(edgeKey);
+
+            const isShortest = shortestEdges.has(`${fromNode}--${toNode}`);
+            const isBothOnline = nodePower[fromNode] && nodePower[toNode];
+            const cls = isShortest ? 'tunnel-wire shortest-path' : 'tunnel-wire';
+            const op = isShortest ? '1' : (isBothOnline ? '0.35' : '0.12');
+
+            wiresHtml += `<line class="${cls}" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" opacity="${op}" />`;
+          }
+        }
+
+        // Rover proximity wires
+        for (const targetNode of dynamicGraph.ROVER) {
+          const p = nodeCoords[targetNode];
+          if (!p) continue;
+          const isShortest = shortestEdges.has(`ROVER--${targetNode}`);
+          const cls = isShortest ? 'tunnel-wire shortest-path' : 'tunnel-wire';
+          wiresHtml += `<line class="${cls}" x1="${roverPos.x}" y1="${roverPos.y}" x2="${p.x}" y2="${p.y}" opacity="${isShortest ? '1' : '0.4'}" />`;
+        }
+
+        wiresGroup.innerHTML = wiresHtml;
+      }
+
+      // 2. Dynamic Relay Node Stations
+      const nodesGroup = document.getElementById('svgNodesGroup');
+      if (nodesGroup) {
+        let nodesHtml = '';
+        for (const [nodeId, pos] of Object.entries(nodeCoords)) {
+          const isOnline = !!nodePower[nodeId];
+          const inPath = shortestRoute && shortestRoute.includes(nodeId);
+          const isGateway = (nodeId === 'GATEWAY');
+
+          let ringCls = 'node-outer-ring';
+          if (isOnline) ringCls += ' online';
+          else ringCls += ' offline';
+          if (inPath) ringCls += ' in-path';
+
+          const r = isGateway ? 27 : 24;
+          const covR = isGateway ? 160 : 140;
+          const covColor = isGateway ? 'rgba(16, 185, 129, 0.04)' : 'rgba(56, 189, 248, 0.03)';
+          const covStroke = isGateway ? 'rgba(16, 185, 129, 0.25)' : 'rgba(56, 189, 248, 0.15)';
+
+          nodesHtml += `
+            <g class="tunnel-node-group" id="nodeGroup-${nodeId}" transform="translate(${pos.x}, ${pos.y})" onclick="handleNodeClick('${nodeId}', event)">
+              <circle r="${covR}" fill="${covColor}" stroke="${covStroke}" stroke-dasharray="3 3" pointer-events="none" />
+              <circle id="nodeRing-${nodeId}" class="${ringCls}" r="${r}" />
+              <text class="node-label-text" y="-4" font-size="${isGateway ? '9' : '11'}">${nodeId}</text>
+              <text class="node-toggle-subtext" y="9" id="svgSub-${nodeId}" fill="${isOnline ? 'var(--neon-green)' : 'var(--neon-red)'}">${isOnline ? 'ON' : 'OFF'}</text>
+            </g>
+          `;
+        }
+        nodesGroup.innerHTML = nodesHtml;
+      }
+
+      // 3. Rover Element Update
+      const roverG = document.getElementById('nodeGroup-ROVER');
+      if (roverG) {
+        roverG.setAttribute('transform', `translate(${roverPos.x}, ${roverPos.y})`);
+        const roverRing = document.getElementById('nodeRing-ROVER');
+        if (roverRing) {
+          roverRing.className = `node-outer-ring online ${shortestRoute ? 'in-path' : ''}`;
+        }
+        const sub = document.getElementById('svgSub-ROVER');
+        if (sub) {
+          sub.innerText = nodePower.ROVER ? 'ON' : 'OFF';
+          sub.style.fill = nodePower.ROVER ? 'var(--neon-green)' : 'var(--neon-red)';
+        }
+      }
+
+      // 4. Update HUD Coordinates & Routing Banner
+      const routeBanner = document.getElementById('routeTextBanner');
+      const metricBanner = document.getElementById('routeMetricBanner');
+      const topHop = document.getElementById('topHopDisplay');
+      const coordsBadge = document.getElementById('roverCoordsBadge');
+
+      if (coordsBadge) {
+        let nearestNode = null, minDist = Infinity;
+        for (const [node, pos] of Object.entries(nodeCoords)) {
+          const d = getDistance(roverPos, pos);
+          if (d < minDist) {
+            minDist = d;
+            nearestNode = node;
+          }
+        }
+        const nearMsg = nearestNode ? ` | Near: ${nearestNode} (${Math.round(minDist)}m)` : '';
+        coordsBadge.innerText = `🚜 ROVER: (X: ${Math.round(roverPos.x)}m, Y: ${Math.round(roverPos.y)}m)${nearMsg}`;
+      }
+
+      if (shortestRoute) {
+        const hopCount = shortestRoute.length - 1;
+        const latency = hopCount * 24;
+        routeBanner.innerHTML = shortestRoute.map(n => `<span style="color:#fff; font-weight:800;">${n}</span>`).join(' ➔ ');
+        metricBanner.innerText = `${hopCount} Hops | Latency: ${latency}ms | Status: OPTIMAL`;
+        metricBanner.style.color = 'var(--neon-green)';
+        if (topHop) topHop.innerText = `${hopCount} Hops`;
+      } else {
+        if (dynamicGraph.ROVER.length === 0) {
+          routeBanner.innerHTML = `<span style="color:var(--neon-amber);">📡 ROVER OUT OF RANGE — MOVE CLOSER TO ANY RELAY NODE</span>`;
+          metricBanner.innerText = `NO SIGNAL | RF Radius: 210m`;
+          metricBanner.style.color = 'var(--neon-amber)';
+        } else {
+          routeBanner.innerHTML = `<span style="color:var(--neon-red);">⚠️ NO ROUTE TO GATEWAY (NETWORK PARTITIONED)</span>`;
+          metricBanner.innerText = `SEVERED LINK | 0 Hops Reachable`;
+          metricBanner.style.color = 'var(--neon-red)';
+        }
+        if (topHop) topHop.innerText = `CUT OFF`;
+      }
+
+      // 5. Update Switch Cards
+      renderNodeSwitchGrid();
+    }
+
+    function refreshTopologyAndRoute() {
+      renderAllMapElements();
+    }
+
+    // Dynamic Switch Grid
+    function renderNodeSwitchGrid() {
+      const grid = document.getElementById('nodeSwitchGrid');
+      if (!grid) return;
+
+      let html = `
+        <div class="node-toggle-card" onclick="toggleNodePower('ROVER')">
+          <span class="toggle-title">🚜 ROVER</span>
+          <button id="btnPower-ROVER" class="power-switch-btn ${nodePower.ROVER ? 'on' : 'off'}">${nodePower.ROVER ? 'ON' : 'OFF'}</button>
+        </div>
+      `;
+
+      for (const nodeId of Object.keys(nodeCoords)) {
+        const isOnline = !!nodePower[nodeId];
+        const label = nodeCoords[nodeId].label || `${nodeId} (Relay)`;
+        html += `
+          <div class="node-toggle-card" onclick="toggleNodePower('${nodeId}')">
+            <span class="toggle-title" title="${label}">${nodeId}</span>
+            <button id="btnPower-${nodeId}" class="power-switch-btn ${isOnline ? 'on' : 'off'}">${isOnline ? 'ON' : 'OFF'}</button>
+          </div>
+        `;
+      }
+      grid.innerHTML = html;
+    }
+
+    // Interactive Map Modes (Add & Delete)
+    function toggleAddMode() {
+      isAddMode = !isAddMode;
+      if (isAddMode) isDeleteMode = false;
+      updateModeVisuals();
+    }
+
+    function toggleDeleteMode() {
+      isDeleteMode = !isDeleteMode;
+      if (isDeleteMode) isAddMode = false;
+      updateModeVisuals();
+    }
+
+    function updateModeVisuals() {
+      const btnAdd = document.getElementById('btnAddRelay');
+      const btnDel = document.getElementById('btnDeleteMode');
+      const label = document.getElementById('mapInstructionLabel');
+      const wrapper = document.getElementById('mapContainerWrapper');
+
+      if (btnAdd) {
+        if (isAddMode) {
+          btnAdd.style.background = 'rgba(0, 240, 255, 0.4)';
+          btnAdd.style.borderColor = '#00f0ff';
+          document.getElementById('btnAddText').innerText = 'PLACING: CLICK MAP';
+        } else {
+          btnAdd.style.background = 'rgba(56, 189, 248, 0.2)';
+          btnAdd.style.borderColor = 'var(--cyan-glow)';
+          document.getElementById('btnAddText').innerText = 'ADD RELAY NODE';
+        }
+      }
+
+      if (btnDel) {
+        if (isDeleteMode) {
+          btnDel.style.background = 'rgba(239, 68, 68, 0.4)';
+          btnDel.style.borderColor = 'var(--neon-red)';
+          btnDel.innerText = '🗑️ DELETE ACTIVE: CLICK NODE';
+        } else {
+          btnDel.style.background = 'rgba(239, 68, 68, 0.15)';
+          btnDel.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+          btnDel.innerText = '🗑️ DELETE RELAY MODE: OFF';
+        }
+      }
+
+      if (wrapper) {
+        wrapper.classList.toggle('add-mode-active', isAddMode);
+        wrapper.classList.toggle('delete-mode-active', isDeleteMode);
+      }
+
+      if (label) {
+        if (isAddMode) {
+          label.innerText = '📍 PLACEMENT ACTIVE: CLICK ON THE MINE FLOOR TO DROP A RELAY NODE';
+          label.style.color = '#00f0ff';
+        } else if (isDeleteMode) {
+          label.innerText = '🗑️ DELETION ACTIVE: CLICK ANY RELAY NODE TO REMOVE FROM NETWORK';
+          label.style.color = 'var(--neon-red)';
+        } else {
+          label.innerText = '🎮 MOVE ROVER: ARROWS / WASD / CLICK TO DRIVE / DRAG';
+          label.style.color = '#38bdf8';
         }
       }
     }
 
+    function handleNodeClick(nodeId, event) {
+      if (event) event.stopPropagation();
+
+      if (isDeleteMode) {
+        if (nodeId === 'GATEWAY' || nodeId === 'ROVER') {
+          alert("Base Station and Rover are critical infrastructure and cannot be deleted.");
+          return;
+        }
+        delete nodeCoords[nodeId];
+        delete nodePower[nodeId];
+        appendLog('[DECOMMISSION]', `Relay node ${nodeId} deleted from subterranean mesh.`, 'alert');
+        renderAllMapElements();
+      } else {
+        toggleNodePower(nodeId);
+      }
+    }
+
+    function getNextRelayName() {
+      for (let i = 5; i <= 60; i++) {
+        const name = `R${i}`;
+        if (!nodeCoords[name]) return name;
+      }
+      return `R_${Math.floor(Math.random() * 1000)}`;
+    }
+
+    function addRelayNodeAt(x, y) {
+      const name = getNextRelayName();
+      nodeCoords[name] = { x: Math.round(x), y: Math.round(y), label: `${name} (Field Relay)` };
+      nodePower[name] = true;
+      isAddMode = false;
+      updateModeVisuals();
+      appendLog('[MESH EXPANSION]', `Deployed new relay station ${name} at (${Math.round(x)}m, ${Math.round(y)}m).`, 'fwd');
+      renderAllMapElements();
+    }
+
+    function restoreDefaultBlueprint() {
+      nodeCoords = JSON.parse(JSON.stringify(DEFAULT_NODES));
+      for (const n in nodeCoords) nodePower[n] = true;
+      nodePower.ROVER = true;
+      isAddMode = false;
+      isDeleteMode = false;
+      roverPos = { x: 95, y: 225 };
+      updateModeVisuals();
+      appendLog('[RESTORE]', 'Subterranean blueprint reset to default 8-node network.', 'fwd');
+      renderAllMapElements();
+    }
+
+    // Rover Navigation & Drag Handlers
+    function driveRover(dx, dy) {
+      roverPos.x = Math.max(50, Math.min(950, roverPos.x + dx));
+      roverPos.y = Math.max(50, Math.min(400, roverPos.y + dy));
+      renderAllMapElements();
+    }
+
+    function driveRoverTo(x, y) {
+      roverPos.x = Math.max(50, Math.min(950, Math.round(x)));
+      roverPos.y = Math.max(50, Math.min(400, Math.round(y)));
+      renderAllMapElements();
+    }
+
+    function resetRoverPosition() {
+      roverPos = { x: 95, y: 225 };
+      renderAllMapElements();
+      appendLog('[ROVER]', 'Rover repositioned to Sector 4-B entry chamber.', 'fwd');
+    }
+
+    function startDragRover(e) {
+      if (e) e.stopPropagation();
+      isDraggingRover = true;
+    }
+
+    function getSvgCoordinates(e) {
+      const svg = document.getElementById('tunnelSvg');
+      const rect = svg.getBoundingClientRect();
+      const scaleX = 1000 / rect.width;
+      const scaleY = 450 / rect.height;
+      return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
+      };
+    }
+
     // Keyboard Arrow Key / WASD Event Listener
     window.addEventListener('keydown', (e) => {
-      const step = e.shiftKey ? 32 : 16;
+      const step = e.shiftKey ? 36 : 18;
       let handled = false;
 
       switch(e.key) {
@@ -1096,82 +1421,7 @@
       }
     });
 
-    // --- Update Topology & Route Display ---
-    function refreshTopologyAndRoute() {
-      // 1. Update each node's visual state
-      for (const [node, isOnline] of Object.entries(nodePower)) {
-        const ring = document.getElementById(`nodeRing-${node}`);
-        const btn = document.getElementById(`btnPower-${node}`);
-        const sub = document.getElementById(`svgSub-${node}`);
-
-        if (ring) {
-          ring.classList.remove('online', 'offline', 'in-path');
-          ring.classList.add(isOnline ? 'online' : 'offline');
-        }
-        if (btn) {
-          btn.className = `power-switch-btn ${isOnline ? 'on' : 'off'}`;
-          btn.innerText = isOnline ? 'ON' : 'OFF';
-        }
-        if (sub) {
-          sub.innerText = isOnline ? 'ON' : 'OFF';
-          sub.style.fill = isOnline ? 'var(--neon-green)' : 'var(--neon-red)';
-        }
-      }
-
-      // 2. Compute Shortest Route dynamically
-      const shortestRoute = computeShortestRoute("ROVER", "GATEWAY");
-
-      // Reset all wire styles
-      document.querySelectorAll('.tunnel-wire').forEach(w => w.classList.remove('shortest-path'));
-
-      const routeBanner = document.getElementById('routeTextBanner');
-      const metricBanner = document.getElementById('routeMetricBanner');
-      const topHop = document.getElementById('topHopDisplay');
-
-      if (shortestRoute) {
-        const hopCount = shortestRoute.length - 1;
-        const latency = hopCount * 24;
-
-        routeBanner.innerHTML = shortestRoute.map(n => `<span style="color:#fff;">${n}</span>`).join(' ➔ ');
-        metricBanner.innerText = `${hopCount} Hops | Latency: ${latency}ms | Status: OPTIMAL`;
-        metricBanner.style.color = 'var(--neon-green)';
-        topHop.innerText = `${hopCount} Hops`;
-
-        // Highlight nodes along the shortest route
-        shortestRoute.forEach(n => {
-          const ring = document.getElementById(`nodeRing-${n}`);
-          if (ring) ring.classList.add('in-path');
-        });
-
-        // Highlight wires along the shortest route with animated laser particle stream
-        for (let i = 0; i < shortestRoute.length - 1; i++) {
-          const from = shortestRoute[i].toLowerCase();
-          const to = shortestRoute[i+1].toLowerCase();
-
-          const w1 = document.getElementById(`wire-${from}-${to}`);
-          const w2 = document.getElementById(`wire-${to}-${from}`);
-          const wire = w1 || w2;
-          if (wire) {
-            wire.style.display = 'block';
-            wire.classList.add('shortest-path');
-          }
-        }
-      } else {
-        const dynGraph = getDynamicMeshGraph();
-        if (dynGraph.ROVER.length === 0) {
-          routeBanner.innerHTML = `<span style="color:var(--neon-amber);">📡 ROVER OUT OF RANGE — MOVE CLOSER TO A RELAY STATION</span>`;
-          metricBanner.innerText = `NO SIGNAL | Move with Arrow Keys`;
-          metricBanner.style.color = 'var(--neon-amber)';
-        } else {
-          routeBanner.innerHTML = `<span style="color:var(--neon-red);">⚠️ NO SURVIVING ROUTE TO GATEWAY (NETWORK PARTITIONED)</span>`;
-          metricBanner.innerText = `LINK SEVERED | 0 Hops Reachable`;
-          metricBanner.style.color = 'var(--neon-red)';
-        }
-        topHop.innerText = `CUT OFF`;
-      }
-    }
-
-    // --- Interactive Toggle Node Function ---
+    // Node Power Control
     function toggleNodePower(node) {
       if (!nodePower.hasOwnProperty(node)) return;
 
@@ -1179,18 +1429,17 @@
       const state = nodePower[node] ? "ONLINE" : "OFFLINE";
       appendLog('[POWER CONTROL]', `Node ${node} switched ${state}.`, nodePower[node] ? 'fwd' : 'alert');
 
-      // Publish control command to MQTT so terminal simulator syncs in real-time
       if (client && client.connected) {
         client.publish('mine/dashboard/toggle_node', JSON.stringify({ node: node }));
       }
 
-      refreshTopologyAndRoute();
+      renderAllMapElements();
     }
 
     function restoreAllNodes() {
       for (const n in nodePower) nodePower[n] = true;
-      appendLog('[RESTORE]', 'All 8 mesh nodes powered ONLINE.', 'fwd');
-      refreshTopologyAndRoute();
+      appendLog('[RESTORE]', 'All mesh nodes powered ONLINE.', 'fwd');
+      renderAllMapElements();
     }
 
     // --- MQTT Connection via WebSockets ---
@@ -1239,6 +1488,18 @@
       lastPacketTime = Date.now();
       document.getElementById('topSeqDisplay').innerText = `#${p.seq || 0}`;
 
+      // Dynamic Safety Thresholds from Terminal simulator
+      if (p.thresholds) {
+        if (p.thresholds.methane_max !== undefined) {
+          currentMethaneThreshold = parseFloat(p.thresholds.methane_max);
+          const tDisp = document.getElementById('methaneThreshDisplay');
+          if (tDisp) tDisp.innerText = `THRESHOLD: ${currentMethaneThreshold}% LEL`;
+        }
+        if (p.thresholds.temp_max !== undefined) {
+          currentTempThreshold = parseFloat(p.thresholds.temp_max);
+        }
+      }
+
       // Battery
       if (p.battery !== undefined) {
         const bat = parseInt(p.battery);
@@ -1265,11 +1526,11 @@
         pushHistory(mVal);
         updateMethaneArc(mVal);
 
-        if (mVal >= 25.0) {
+        if (mVal >= currentMethaneThreshold) {
           gasText.style.color = "var(--neon-red)";
           gasPill.className = "alert-pill-badge badge-danger";
           gasPill.innerText = "DANGER HIGH";
-        } else if (mVal >= 15.0) {
+        } else if (mVal >= currentMethaneThreshold * 0.65) {
           gasText.style.color = "var(--neon-amber)";
           gasPill.className = "alert-pill-badge badge-unmeasured";
           gasPill.innerText = "ELEVATED";
@@ -1416,7 +1677,7 @@
       const arc = document.getElementById('methaneGaugeArc');
       if (pct > 0.01) {
         arc.setAttribute('d', `M 15 65 A ${r} ${r} 0 0 1 ${endX.toFixed(1)} ${endY.toFixed(1)}`);
-        arc.setAttribute('stroke', val >= 25.0 ? '#ef4444' : (val >= 15.0 ? '#f59e0b' : '#00f0ff'));
+        arc.setAttribute('stroke', val >= currentMethaneThreshold ? '#ef4444' : (val >= currentMethaneThreshold * 0.65 ? '#f59e0b' : '#00f0ff'));
       } else {
         arc.setAttribute('d', `M 15 65 A ${r} ${r} 0 0 1 15 65`);
       }
@@ -1436,9 +1697,9 @@
 
       ctx.clearRect(0, 0, w, h);
 
-      // 25% threshold
-      const threshY = h - (25 / 60) * h;
-      ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+      // Dynamic safety threshold dashed line
+      const threshY = h - (currentMethaneThreshold / 60) * h;
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.55)';
       ctx.setLineDash([4, 4]);
       ctx.beginPath();
       ctx.moveTo(0, threshY);
@@ -1553,9 +1814,46 @@
       }
     }, 1000);
 
-    // Initial render
-    updateRoverSvgElement();
-    refreshTopologyAndRoute();
+    // SVG Interactive Click, Drag & Mobile Touch Handlers
+    const svgEl = document.getElementById('tunnelSvg');
+    if (svgEl) {
+      svgEl.addEventListener('click', (e) => {
+        const pt = getSvgCoordinates(e);
+        if (isAddMode) {
+          addRelayNodeAt(pt.x, pt.y);
+        } else if (!isDeleteMode && !isDraggingRover) {
+          driveRoverTo(pt.x, pt.y);
+        }
+      });
+
+      svgEl.addEventListener('mousemove', (e) => {
+        if (isDraggingRover) {
+          const pt = getSvgCoordinates(e);
+          driveRoverTo(pt.x, pt.y);
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDraggingRover = false;
+      });
+
+      // Mobile touch drag support
+      svgEl.addEventListener('touchmove', (e) => {
+        if (isDraggingRover && e.touches.length > 0) {
+          e.preventDefault();
+          const touch = e.touches[0];
+          const pt = getSvgCoordinates(touch);
+          driveRoverTo(pt.x, pt.y);
+        }
+      }, { passive: false });
+
+      window.addEventListener('touchend', () => {
+        isDraggingRover = false;
+      });
+    }
+
+    // Initial render of all subterranean map elements
+    renderAllMapElements();
   </script>
 </body>
 </html>
