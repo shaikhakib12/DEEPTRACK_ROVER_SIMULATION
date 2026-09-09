@@ -145,6 +145,78 @@
       animation: none;
     }
 
+    .status-pill.auto-mode {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: rgba(168, 85, 247, 0.5);
+      color: #c084fc;
+    }
+    .status-pill.auto-mode .status-dot {
+      background: #c084fc;
+      box-shadow: 0 0 10px #c084fc;
+    }
+    .status-pill.wokwi-live {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.5);
+      color: var(--neon-green);
+    }
+    .status-pill.wokwi-live .status-dot {
+      background: var(--neon-green);
+      box-shadow: 0 0 10px var(--neon-green);
+    }
+
+    /* Mode Switch Container */
+    .mode-toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(10, 15, 29, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 28px;
+      padding: 4px 6px 4px 14px;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+    }
+    .mode-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .mode-btn-group {
+      display: flex;
+      gap: 4px;
+    }
+    .mode-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mode-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .mode-btn.active#btnModeManual {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.4), rgba(14, 165, 233, 0.25));
+      border-color: var(--cyan-glow);
+      color: #fff;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+    }
+    .mode-btn.active#btnModeAuto {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(139, 92, 246, 0.25));
+      border-color: #c084fc;
+      color: #fff;
+      box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
+    }
+
     @keyframes pulseDot {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.3); opacity: 0.6; }
@@ -172,6 +244,192 @@
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
+    }
+
+    /* Hardware Connection Banner */
+    .hardware-connection-banner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      transition: all 0.35s ease;
+    }
+    .hardware-connection-banner.disconnected {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.1);
+    }
+    .hardware-connection-banner.partial {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.1);
+    }
+    .hardware-connection-banner.connected {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      box-shadow: 0 4px 24px rgba(16, 185, 129, 0.15);
+    }
+    .hardware-connection-banner.autonomous {
+      background: rgba(168, 85, 247, 0.09);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.1);
+    }
+
+    .hw-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hw-pulse-indicator {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .hardware-connection-banner.disconnected .hw-pulse-indicator {
+      background: var(--neon-red);
+      box-shadow: 0 0 12px var(--neon-red);
+    }
+    .hardware-connection-banner.partial .hw-pulse-indicator {
+      background: var(--neon-amber);
+      box-shadow: 0 0 12px var(--neon-amber);
+      animation: pulseDot 1.4s infinite;
+    }
+    .hardware-connection-banner.connected .hw-pulse-indicator {
+      background: var(--neon-green);
+      box-shadow: 0 0 14px var(--neon-green);
+      animation: pulseDot 1.4s infinite;
+    }
+    .hardware-connection-banner.autonomous .hw-pulse-indicator {
+      background: #c084fc;
+      box-shadow: 0 0 14px #c084fc;
+      animation: pulseDot 1.4s infinite;
+    }
+
+    .hw-banner-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hw-banner-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+    }
+    .hardware-connection-banner.disconnected .hw-banner-title { color: #f87171; }
+    .hardware-connection-banner.partial .hw-banner-title { color: #fbbf24; }
+    .hardware-connection-banner.connected .hw-banner-title { color: #34d399; }
+    .hardware-connection-banner.autonomous .hw-banner-title { color: #c084fc; }
+
+    .hw-banner-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .hw-nodes-status-chips {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hw-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+      transition: all 0.25s ease;
+    }
+    .hw-chip.disconnected {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+    .hw-chip.partial {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fcd34d;
+    }
+    .hw-chip.connected {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.5);
+      color: #6ee7b7;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .hw-chip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .hw-chip.disconnected .hw-chip-dot { background: var(--neon-red); }
+    .hw-chip.partial .hw-chip-dot { background: var(--neon-amber); }
+    .hw-chip.connected .hw-chip-dot { background: var(--neon-green); box-shadow: 0 0 6px var(--neon-green); }
+
+    .hw-chip-name {
+      color: var(--text-muted);
+      font-size: 0.68rem;
+    }
+    .hw-chip.connected .hw-chip-name { color: #a7f3d0; }
+    .hw-chip.disconnected .hw-chip-name { color: #fecaca; }
+
+    .hw-chip-val {
+      font-family: monospace;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    /* Read-Only Node Cards & Power Badges */
+    .node-toggle-card.read-only {
+      cursor: default;
+    }
+    .node-toggle-card.read-only:hover {
+      border-color: rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.5);
+    }
+    .power-status-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      font-family: monospace;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      letter-spacing: 0.5px;
+    }
+    .power-status-badge.connected {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--neon-green);
+    }
+    .power-status-badge.disconnected {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: var(--neon-red);
+    }
+    .status-mini-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+    .power-status-badge.connected .status-mini-dot {
+      background: var(--neon-green);
+      box-shadow: 0 0 6px var(--neon-green);
+    }
+    .power-status-badge.disconnected .status-mini-dot {
+      background: var(--neon-red);
     }
 
     /* Grid Layout */
@@ -449,6 +707,93 @@
       border: 1px solid var(--neon-red);
     }
 
+    /* Interactive Environment Sensor Controls Console */
+    .sensor-ctrl-group {
+      background: rgba(10, 15, 28, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      transition: border-color 0.2s;
+    }
+    .sensor-ctrl-group:hover {
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+    .sensor-ctrl-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+    .sensor-ctrl-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #1e293b;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      display: block;
+    }
+    .sensor-ctrl-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--cyan-glow);
+      box-shadow: 0 0 10px var(--cyan-glow);
+      cursor: pointer;
+    }
+    .preset-btn-row {
+      display: flex;
+      gap: 5px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .preset-btn {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      border-radius: 5px;
+      padding: 3px 8px;
+      font-size: 0.66rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .preset-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      color: #fff;
+      border-color: var(--cyan-glow);
+    }
+    .scenario-btn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .scenario-btn {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .scenario-btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--cyan-glow);
+    }
+
     /* Environmental Arc Gauges & Meters */
     .meters-row {
       display: grid;
@@ -629,6 +974,19 @@
       </div>
     </div>
 
+    <!-- Mode Selector: Manual / Wokwi vs Autonomous -->
+    <div class="mode-toggle-container">
+      <span class="mode-label">ENGINE MODE:</span>
+      <div class="mode-btn-group">
+        <button id="btnModeManual" class="mode-btn active" onclick="setOperationalMode('MANUAL')" title="Listen to real Wokwi ESP32 hardware simulation via MQTT">
+          <span>🎮</span> MANUAL / WOKWI
+        </button>
+        <button id="btnModeAuto" class="mode-btn" onclick="setOperationalMode('AUTONOMOUS')" title="Autonomous Browser Simulation & MQTT Transmitter">
+          <span>🤖</span> AUTONOMOUS
+        </button>
+      </div>
+    </div>
+
     <div class="header-telemetry-status">
       <div class="telemetry-chip">
         <span class="chip-label">Mesh Sequence</span>
@@ -642,12 +1000,12 @@
 
       <div class="telemetry-chip">
         <span class="chip-label">Packet Age / Latency</span>
-        <span class="chip-value" id="topLatencyDisplay">0.0s</span>
+        <span class="chip-value" id="topLatencyDisplay">--</span>
       </div>
 
-      <div id="gatewayStatusPill" class="status-pill offline">
+      <div id="modeStatusPill" class="status-pill offline" title="Current Engine State">
         <span class="status-dot"></span>
-        <span id="gatewayStatusText">Base Station Offline</span>
+        <span id="modeStatusText">WAITING FOR WOKWI</span>
       </div>
 
       <button id="soundToggleBtn" onclick="toggleAudioAlarm()" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.15); color: #38bdf8; border-radius: 8px; padding: 7px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
@@ -662,6 +1020,34 @@
     🚨 CRITICAL MINE HAZARD DETECTED: RESCUE CREW ALERT PROTOCOL ACTIVE 🚨
   </div>
 
+  <!-- Hardware Mesh Connectivity & Wokwi Simulation Status Bar -->
+  <div id="hardwareConnectionBanner" class="hardware-connection-banner disconnected">
+    <div class="hw-banner-left">
+      <div class="hw-pulse-indicator" id="hwMainPulse"></div>
+      <div class="hw-banner-info">
+        <span class="hw-banner-title" id="hwBannerTitle">WOKWI SIMULATION IS OFF — HARDWARE DISCONNECTED</span>
+        <span class="hw-banner-sub" id="hwBannerSub">Start Wokwi simulation or python run_all_nodes.py in terminal to connect Gateway, Rover, and Relay nodes.</span>
+      </div>
+    </div>
+    <div class="hw-nodes-status-chips">
+      <div class="hw-chip disconnected" id="chipHwGateway">
+        <span class="hw-chip-dot"></span>
+        <span class="hw-chip-name">BASE STATION:</span>
+        <span class="hw-chip-val" id="chipValGateway">NOT CONNECTED</span>
+      </div>
+      <div class="hw-chip disconnected" id="chipHwRover">
+        <span class="hw-chip-dot"></span>
+        <span class="hw-chip-name">ROVER:</span>
+        <span class="hw-chip-val" id="chipValRover">NOT CONNECTED</span>
+      </div>
+      <div class="hw-chip disconnected" id="chipHwRelays">
+        <span class="hw-chip-dot"></span>
+        <span class="hw-chip-name">RELAY NODES:</span>
+        <span class="hw-chip-val" id="chipValRelays">NOT CONNECTED (0/6 ONLINE)</span>
+      </div>
+    </div>
+  </div>
+
   <div class="dashboard-grid">
 
     <!-- Subterranean Mine Mesh Topology & Shortest Path Optimizer (Centered & Full-Width) -->
@@ -674,6 +1060,9 @@
           <span id="roverCoordsBadge" class="card-subtitle-badge" style="color: #38bdf8; font-family: monospace;">🚜 ROVER: (X: 95m, Y: 225m)</span>
         </div>
         <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <button onclick="scatterRelayNodesRandomly()" style="background: rgba(168, 85, 247, 0.2); border: 1px solid #c084fc; color: #c084fc; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s;" title="Randomly scatter relay stations across multiple tunnels">
+            <span>🎲</span> SCATTER RELAYS
+          </button>
           <button id="btnAddRelay" onclick="toggleAddMode()" style="background: rgba(56, 189, 248, 0.2); border: 1px solid var(--cyan-glow); color: var(--cyan-glow); padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s;">
             <span>➕</span> <span id="btnAddText">ADD RELAY NODE</span>
           </button>
@@ -682,9 +1071,6 @@
           </button>
           <button onclick="restoreDefaultBlueprint()" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #7dd3fc; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; cursor: pointer;">
             🔄 RESET NODES
-          </button>
-          <button onclick="restoreAllNodes()" style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; cursor: pointer;">
-            ⚡ ALL ON
           </button>
         </div>
       </div>
@@ -697,7 +1083,7 @@
             <span class="route-text" id="routeTextBanner">ROVER ➔ R1A ➔ R2 ➔ R4A ➔ GATEWAY</span>
           </div>
           <div style="display: flex; gap: 16px; align-items: center; flex-shrink: 0;">
-            <span id="mapInstructionLabel" style="color: #38bdf8; font-size: 0.72rem; font-weight: 700;">🎮 MOVE ROVER: ARROWS / WASD / CLICK TO DRIVE / DRAG</span>
+            <span id="mapInstructionLabel" style="color: #38bdf8; font-size: 0.72rem; font-weight: 700;">⌨️ TERMINAL CONTROL ONLY: USE ARROWS / IJKL IN RUN_ALL_NODES.PY (DASHBOARD DRIVING DISABLED)</span>
             <div class="route-metric" id="routeMetricBanner">4 Hops | Latency: 96ms</div>
           </div>
         </div>
@@ -732,57 +1118,120 @@
           <rect x="0" y="0" width="1000" height="450" rx="12" fill="#030816" />
           <rect x="15" y="15" width="970" height="420" rx="8" fill="url(#blueprintGridMajor)" />
 
-          <!-- Blueprint Mine Outer Tunnel Excavation Contours -->
+          <!-- Blueprint Mine Multiple Tunnel Excavation Labyrinth -->
           <g id="svgBlueprintExcavations">
-            <!-- Stope 4-B Deep Entry Cave (Far Left Face) -->
-            <rect x="35" y="60" width="150" height="330" rx="10" class="blueprint-chamber" />
+            <!-- Stope 4-B Deep Entry Cavern (Far Left Extraction Heading) -->
+            <polygon points="35,65 175,65 175,395 35,395" class="blueprint-chamber" rx="8" />
+            <line x1="175" y1="65" x2="175" y2="395" stroke="#0284c7" stroke-width="2" stroke-dasharray="6 3" />
             
-            <!-- Upper Ventilation & Haulage Drift -->
-            <rect x="185" y="60" width="675" height="120" rx="8" class="blueprint-chamber" />
-            
-            <!-- Lower Drainage Sump Drift -->
-            <rect x="185" y="270" width="675" height="120" rx="8" class="blueprint-chamber" />
+            <!-- GALLERY 1: Upper North Ventilation & Incline Drift -->
+            <path d="M 175,65 L 340,65 L 380,105 L 530,105 L 570,65 L 860,65 L 860,145 L 560,145 L 530,165 L 370,165 L 330,125 L 175,125 Z" class="blueprint-chamber" />
+            <text x="250" y="80" class="blueprint-text" fill="rgba(56,189,248,0.7)" font-size="8">◄ TUNNEL 1: NORTH VENTILATION DRIFT (-160m)</text>
 
-            <!-- Vertical Interconnecting Crosscut Shafts -->
-            <rect x="320" y="160" width="60" height="130" class="blueprint-chamber" />
-            <rect x="560" y="160" width="60" height="130" class="blueprint-chamber" />
-            <rect x="760" y="160" width="60" height="130" class="blueprint-chamber" />
+            <!-- GALLERY 2: Central Main 200-Level Ore Haulage Way (Railway Tracks) -->
+            <rect x="175" y="185" width="695" height="70" class="blueprint-chamber" />
+            <text x="210" y="200" class="blueprint-text" fill="rgba(56,189,248,0.85)" font-size="8.5">════ TUNNEL 2: MAIN 200-LEVEL ORE HAULAGE (RAILS) ════</text>
+            <!-- Heavy Mine Cart Dual Railway Rails with Sleeper Ties -->
+            <line x1="175" y1="216" x2="870" y2="216" stroke="rgba(2, 132, 199, 0.65)" stroke-width="1.5" />
+            <line x1="175" y1="224" x2="870" y2="224" stroke="rgba(2, 132, 199, 0.65)" stroke-width="1.5" />
+            <line x1="175" y1="220" x2="870" y2="220" stroke="rgba(56, 189, 248, 0.5)" stroke-width="3" stroke-dasharray="4 8" />
 
-            <!-- Solid Bedrock Pillars (Unexcavated Rock Divide) -->
-            <rect x="205" y="180" width="115" height="90" rx="4" class="blueprint-pillar" />
-            <rect x="205" y="180" width="115" height="90" rx="4" fill="url(#pillarHatch)" />
-            <text x="262" y="228" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="9" text-anchor="middle">ROCK PILLAR A</text>
+            <!-- GALLERY 3: Lower Sub-Level Drainage Sump & Incline -->
+            <path d="M 175,295 L 370,295 L 430,325 L 670,325 L 720,295 L 860,295 L 860,395 L 710,395 L 650,415 L 420,415 L 360,395 L 175,395 Z" class="blueprint-chamber" />
+            <text x="250" y="380" class="blueprint-text" fill="rgba(56,189,248,0.7)" font-size="8">◄ TUNNEL 3: SUB-LEVEL DRAINAGE SUMP & RESERVOIR (-265m)</text>
 
-            <rect x="380" y="180" width="180" height="90" rx="4" class="blueprint-pillar" />
-            <rect x="380" y="180" width="180" height="90" rx="4" fill="url(#pillarHatch)" />
-            <text x="470" y="228" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="9" text-anchor="middle">ROCK PILLAR B (CENTRAL)</text>
+            <!-- Diagonal Connecting Crosscuts & Winzes (True Labyrinth Network) -->
+            <!-- Crosscut 1A (West Diagonal Incline) -->
+            <polygon points="175,185 225,185 285,125 235,125" class="blueprint-chamber" />
+            <text x="248" y="160" class="blueprint-text" fill="rgba(0,240,255,0.6)" font-size="7" transform="rotate(-40 248 160)">X-CUT 1A</text>
 
-            <rect x="620" y="180" width="140" height="90" rx="4" class="blueprint-pillar" />
-            <rect x="620" y="180" width="140" height="90" rx="4" fill="url(#pillarHatch)" />
-            <text x="690" y="228" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="9" text-anchor="middle">ROCK PILLAR C</text>
+            <!-- Crosscut 1B (West Sump Descent Adit) -->
+            <polygon points="210,255 260,255 310,295 260,295" class="blueprint-chamber" />
+            <text x="270" y="278" class="blueprint-text" fill="rgba(0,240,255,0.6)" font-size="7" transform="rotate(35 270 278)">X-CUT 1B</text>
+
+            <!-- Ore Raise #2 (Vertical Chute Shaft) -->
+            <rect x="405" y="255" width="55" height="40" class="blueprint-chamber" />
+            <text x="432" y="278" class="blueprint-text" fill="rgba(0,240,255,0.6)" font-size="7" text-anchor="middle">RAISE #2</text>
+
+            <!-- Diagonal Winze #3 (Central Junction Incline) -->
+            <polygon points="465,185 515,185 545,145 495,145" class="blueprint-chamber" />
+            <text x="515" y="165" class="blueprint-text" fill="rgba(0,240,255,0.6)" font-size="7" transform="rotate(-50 515 165)">WINZE #3</text>
+
+            <!-- Crosscut 4A (East Vent Bypass) -->
+            <polygon points="665,145 715,145 745,185 695,185" class="blueprint-chamber" />
+            <text x="715" y="165" class="blueprint-text" fill="rgba(0,240,255,0.6)" font-size="7" transform="rotate(50 715 165)">X-CUT 4A</text>
+
+            <!-- Crosscut 4B (East Sump Overflow) -->
+            <polygon points="735,255 785,255 810,295 760,295" class="blueprint-chamber" />
+            <text x="785" y="278" class="blueprint-text" fill="rgba(0,240,255,0.6)" font-size="7" transform="rotate(45 785 278)">X-CUT 4B</text>
+
+            <!-- Solid Bedrock Pillar Islands (Unexcavated Rock Formations) -->
+            <rect x="215" y="135" width="105" height="48" rx="4" class="blueprint-pillar" />
+            <rect x="215" y="135" width="105" height="48" rx="4" fill="url(#pillarHatch)" />
+            <text x="267" y="162" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="8" text-anchor="middle">PILLAR A</text>
+
+            <rect x="265" y="258" width="135" height="34" rx="4" class="blueprint-pillar" />
+            <rect x="265" y="258" width="135" height="34" rx="4" fill="url(#pillarHatch)" />
+            <text x="332" y="278" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="8" text-anchor="middle">PILLAR B (LOWER)</text>
+
+            <rect x="440" y="115" width="85" height="68" rx="4" class="blueprint-pillar" />
+            <rect x="440" y="115" width="85" height="68" rx="4" fill="url(#pillarHatch)" />
+            <text x="482" y="152" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="8" text-anchor="middle">PILLAR C (MID)</text>
+
+            <rect x="465" y="258" width="170" height="64" rx="4" class="blueprint-pillar" />
+            <rect x="465" y="258" width="170" height="64" rx="4" fill="url(#pillarHatch)" />
+            <text x="550" y="294" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="8" text-anchor="middle">PILLAR D (SUMP DIVIDE)</text>
+
+            <rect x="710" y="115" width="85" height="68" rx="4" class="blueprint-pillar" />
+            <rect x="710" y="115" width="85" height="68" rx="4" fill="url(#pillarHatch)" />
+            <text x="752" y="152" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="8" text-anchor="middle">PILLAR E</text>
+
+            <rect x="745" y="258" width="115" height="34" rx="4" class="blueprint-pillar" />
+            <rect x="745" y="258" width="115" height="34" rx="4" fill="url(#pillarHatch)" />
+            <text x="802" y="278" class="blueprint-text" fill="rgba(56,189,248,0.6)" font-size="8" text-anchor="middle">PILLAR F</text>
 
             <!-- Surface Extraction Pithead Hoist Shaft (Gateway Base Station, Far Right) -->
-            <rect x="860" y="90" width="110" height="270" rx="8" fill="rgba(16, 185, 129, 0.05)" stroke="rgba(16, 185, 129, 0.4)" stroke-width="1.5" stroke-dasharray="4 4" />
-            <line x1="915" y1="30" x2="915" y2="90" stroke="#10b981" stroke-width="2" stroke-dasharray="2 2" />
-            <text x="915" y="55" fill="#10b981" font-size="9" font-family="monospace" text-anchor="middle">▲ PITHEAD ELEVATOR (SURFACE)</text>
+            <rect x="870" y="80" width="105" height="295" rx="8" fill="rgba(16, 185, 129, 0.05)" stroke="rgba(16, 185, 129, 0.5)" stroke-width="1.5" stroke-dasharray="4 4" />
+            <line x1="925" y1="20" x2="925" y2="80" stroke="#10b981" stroke-width="2.5" stroke-dasharray="2 2" />
+            <circle cx="925" cy="40" r="5" fill="#10b981">
+              <animate attributeName="r" values="3;7;3" dur="1.8s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.8s" repeatCount="indefinite" />
+            </circle>
+            <text x="925" y="60" fill="#10b981" font-size="9" font-family="monospace" font-weight="bold" text-anchor="middle">▲ PITHEAD ELEVATOR HOIST</text>
 
-            <!-- Hazard Warning Overlays on Mine Blueprint -->
-            <!-- Hazard Zone 1: Methane Gas Pocket at Upper North Drift -->
-            <rect x="390" y="70" width="160" height="40" rx="4" fill="url(#hazardHatch)" stroke="rgba(245, 158, 11, 0.5)" stroke-width="1" />
-            <text x="470" y="94" fill="#fbbf24" font-size="8" font-family="monospace" font-weight="bold" text-anchor="middle">⚠️ GAS POCKET (CH4 %LEL RISK)</text>
+            <!-- Pulsing Animated Hazard Overlays -->
+            <!-- Hazard 1: Pulsing Methane Gas Cloud (Tunnel 1 Alcove) -->
+            <g transform="translate(450, 95)">
+              <ellipse rx="65" ry="24" fill="rgba(245, 158, 11, 0.18)" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 3">
+                <animate attributeName="rx" values="55;72;55" dur="3.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.4;0.85;0.4" dur="3.5s" repeatCount="indefinite" />
+              </ellipse>
+              <text y="4" fill="#fbbf24" font-size="8.5" font-family="monospace" font-weight="900" text-anchor="middle">⚠️ METHANE ACCUMULATION (CH4)</text>
+            </g>
 
-            <!-- Hazard Zone 2: Flooding Drainage Sump at Lower South Drift -->
-            <rect x="630" y="340" width="140" height="40" rx="4" fill="rgba(6, 182, 212, 0.12)" stroke="rgba(6, 182, 212, 0.5)" stroke-width="1" />
-            <text x="700" y="364" fill="#38bdf8" font-size="8" font-family="monospace" font-weight="bold" text-anchor="middle">🌊 WATER DRAINAGE SUMP</text>
+            <!-- Hazard 2: Water Flooding Pool (Tunnel 3 Lower Sump) -->
+            <g transform="translate(540, 365)">
+              <ellipse rx="85" ry="26" fill="rgba(6, 182, 212, 0.22)" stroke="#00f0ff" stroke-width="1.5">
+                <animate attributeName="ry" values="22;28;22" dur="2.8s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.8s" repeatCount="indefinite" />
+              </ellipse>
+              <text y="4" fill="#38bdf8" font-size="8.5" font-family="monospace" font-weight="900" text-anchor="middle">🌊 SUBMERGED SUMP RESERVOIR</text>
+            </g>
 
-            <!-- Blueprint Drafting Annotations -->
-            <text x="45" y="42" class="blueprint-text" fill="#38bdf8">◄ STOPE 4-B EXTRACTION FACE (DEPTH: 210m)</text>
-            <text x="500" y="42" class="blueprint-text" fill="#0284c7" text-anchor="middle">DWG: SUBTERRANEAN MINE MESH BLUEPRINT [SECTOR 4-B LEVEL]</text>
-            <text x="895" y="42" class="blueprint-text" fill="#10b981" text-anchor="end">SURFACE BASE PITHEAD (0m) ►</text>
+            <!-- Timber Shoring Frames along Drift Walls -->
+            <line x1="175" y1="185" x2="175" y2="255" stroke="#38bdf8" stroke-width="3" opacity="0.6" />
+            <line x1="370" y1="185" x2="370" y2="255" stroke="#38bdf8" stroke-width="3" opacity="0.6" />
+            <line x1="560" y1="185" x2="560" y2="255" stroke="#38bdf8" stroke-width="3" opacity="0.6" />
+            <line x1="720" y1="185" x2="720" y2="255" stroke="#38bdf8" stroke-width="3" opacity="0.6" />
 
-            <text x="45" y="415" class="blueprint-text" fill="#64748b">SCALE: 1px = 0.5m | RF FREQ: 868MHz LoRa / ESP-NOW</text>
-            <text x="500" y="415" class="blueprint-text" fill="#64748b" text-anchor="middle">BLUEPRINT REVISION 3.2 | AUTONOMOUS MESH TOPOLOGY</text>
-            <text x="965" y="415" class="blueprint-text" fill="#64748b" text-anchor="end">COORD REF: S4B-GRID</text>
+            <!-- Blueprint Drafting Scale & Annotations -->
+            <text x="45" y="45" class="blueprint-text" fill="#38bdf8">◄ STOPE 4-B EXTRACTION FACE (DEPTH: -210m)</text>
+            <text x="500" y="45" class="blueprint-text" fill="#0284c7" text-anchor="middle">DWG: MULTI-LEVEL SUBTERRANEAN MINE DRIFTS [LABYRINTH GRID]</text>
+            <text x="895" y="45" class="blueprint-text" fill="#10b981" text-anchor="end">SURFACE BASE PITHEAD (0m) ►</text>
+
+            <text x="45" y="425" class="blueprint-text" fill="#64748b">SCALE: 1px = 0.5m | RF FREQ: 868MHz LoRa / ESP-NOW</text>
+            <text x="500" y="425" class="blueprint-text" fill="#64748b" text-anchor="middle">REVISION 4.0 | MULTI-TUNNEL LABYRINTH TOPOLOGY</text>
+            <text x="965" y="425" class="blueprint-text" fill="#64748b" text-anchor="end">COORD REF: S4B-LABYRINTH</text>
           </g>
 
           <!-- Dynamic Inter-Node & Rover Wires Group (Generated by JS) -->
@@ -820,26 +1269,24 @@
           </g>
         </svg>
 
-        <!-- On-Screen Virtual D-PAD Controller for Mobile & Direct Testing -->
-        <div style="position: absolute; right: 28px; bottom: 24px; display: grid; grid-template-columns: repeat(3, 34px); gap: 4px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); padding: 6px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); z-index: 10;">
-          <div></div>
-          <button onclick="driveRover(0, -25)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;" title="Drive North">▲</button>
-          <div></div>
-          <button onclick="driveRover(-25, 0)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;" title="Drive West">◀</button>
-          <button onclick="resetRoverPosition()" title="Reset Rover to Start" style="background:#0284c7; color:#fff; border:none; border-radius:6px; height:32px; font-size:11px; font-weight:800; cursor:pointer;">⌂</button>
-          <button onclick="driveRover(25, 0)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;" title="Drive East">▶</button>
-          <div></div>
-          <button onclick="driveRover(0, 25)" style="background:#1e293b; color:#38bdf8; border:1px solid #334155; border-radius:6px; height:32px; font-weight:900; cursor:pointer;" title="Drive South">▼</button>
-          <div></div>
+        <!-- Teleoperation Authority Indicator Badge (Dashboard driving disabled, Terminal authority only) -->
+        <div id="teleopAuthorityBadge" style="position: absolute; right: 24px; bottom: 20px; background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(8px); padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.35); z-index: 10; font-size: 0.72rem; color: #94a3b8; display: flex; flex-direction: column; gap: 3px; box-shadow: 0 4px 16px rgba(0,0,0,0.6);">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span id="teleopDot" style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 8px #38bdf8;"></span>
+            <span id="teleopAuthorityTitle" style="color: #38bdf8; font-weight: 800; letter-spacing: 0.5px;">TERMINAL CONTROL ONLY</span>
+          </div>
+          <div id="teleopAuthorityDesc" style="font-size: 0.65rem; color: #64748b;">Drive via Arrows / IJKL in run_all_nodes.py</div>
         </div>
       </div>
 
-      <!-- Dynamic Node Power Controller Switches Bar -->
+      <!-- Hardware Mesh Node Status Matrix (Read-Only • Terminal Controlled) -->
       <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800;">INDIVIDUAL NODE HARDWARE POWER & RELAY SWITCHES:</span>
-        <button onclick="restoreAllNodes()" style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 3px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer;">
-          TURN ALL ON
-        </button>
+        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; letter-spacing: 0.5px;">
+          HARDWARE MESH NODE CONNECTION STATUS (CONTROLLED VIA TERMINAL ONLY):
+        </span>
+        <span style="font-size: 0.68rem; color: #64748b; font-weight: 600; font-family: monospace;">
+          [Authority: run_all_nodes.py / Wokwi Hardware Switches]
+        </span>
       </div>
 
       <!-- Dynamic Switch Container (Updated automatically when nodes added/deleted) -->
@@ -905,9 +1352,83 @@
       <div style="margin-top: 10px;">
         <div style="display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted);">
           <span>METHANE TREND (LAST 30 PACKETS)</span>
-          <span style="color: var(--cyan-glow);">THRESHOLD: 25% LEL</span>
+          <span id="methaneThreshDisplay" style="color: var(--cyan-glow);">THRESHOLD: 25% LEL</span>
         </div>
         <canvas id="chartCanvas" width="400" height="75"></canvas>
+      </div>
+    </div>
+
+    <!-- 🎛️ Live Environment Sensor Master Controller & Hazard Simulator -->
+    <div class="glass-card col-4">
+      <div class="card-header">
+        <span class="card-title">🎛️ Environment Sensor Controls</span>
+        <span class="card-subtitle-badge" style="color: var(--cyan-glow);">LIVE OVERRIDE</span>
+      </div>
+
+      <!-- Methane Gas Control Group -->
+      <div class="sensor-ctrl-group">
+        <div class="sensor-ctrl-header">
+          <span style="color: #cbd5e1;">💥 METHANE GAS (CH4):</span>
+          <span id="ctrlMethaneValDisplay" style="color: var(--cyan-glow); font-family: monospace; font-weight: 900;">16.5% LEL</span>
+        </div>
+        <input type="range" id="sliderMethane" class="sensor-ctrl-slider" min="0" max="70" step="0.5" value="16.5" oninput="onUserSensorSliderChange('methane', this.value)" />
+        <div class="preset-btn-row">
+          <button class="preset-btn" onclick="applySensorPreset('methane', 12.0)">12% Safe</button>
+          <button class="preset-btn" onclick="applySensorPreset('methane', 18.0)">18% Normal</button>
+          <button class="preset-btn" onclick="applySensorPreset('methane', 28.0)" style="color:#fbbf24;">28% High</button>
+          <button class="preset-btn" onclick="applySensorPreset('methane', 55.0)" style="color:#f87171;">55% DANGER</button>
+        </div>
+      </div>
+
+      <!-- Temperature Control Group -->
+      <div class="sensor-ctrl-group">
+        <div class="sensor-ctrl-header">
+          <span style="color: #cbd5e1;">🌡️ TUNNEL TEMPERATURE:</span>
+          <span id="ctrlTempValDisplay" style="color: #fb923c; font-family: monospace; font-weight: 900;">29.2°C</span>
+        </div>
+        <input type="range" id="sliderTemp" class="sensor-ctrl-slider" min="15" max="55" step="0.5" value="29.2" oninput="onUserSensorSliderChange('temp', this.value)" />
+        <div class="preset-btn-row">
+          <button class="preset-btn" onclick="applySensorPreset('temp', 22.0)">22°C Cool</button>
+          <button class="preset-btn" onclick="applySensorPreset('temp', 29.2)">29°C Nominal</button>
+          <button class="preset-btn" onclick="applySensorPreset('temp', 40.0)" style="color:#fbbf24;">40°C Heat</button>
+          <button class="preset-btn" onclick="applySensorPreset('temp', 49.0)" style="color:#f87171;">49°C FIRE</button>
+        </div>
+      </div>
+
+      <!-- Water Flood & Thermal AI Toggles Row -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+        <button id="btnToggleWater" onclick="toggleWaterOverride()" style="background: rgba(15,23,42,0.85); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 7px 6px; color: #94a3b8; font-size: 0.7rem; font-weight: 800; cursor: pointer; text-align: center; transition: all 0.2s;">
+          🌊 FLOOD: <span id="btnWaterLabel" style="color:var(--neon-green);">DRY</span>
+        </button>
+        <button id="btnTogglePerson" onclick="togglePersonOverride()" style="background: rgba(15,23,42,0.85); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 7px 6px; color: #94a3b8; font-size: 0.7rem; font-weight: 800; cursor: pointer; text-align: center; transition: all 0.2s;">
+          👤 HUMAN AI: <span id="btnPersonLabel" style="color:#94a3b8;">SCANNING</span>
+        </button>
+      </div>
+
+      <!-- Safety Alarm Threshold Controls (Syncs with Terminal) -->
+      <div class="sensor-ctrl-group" style="border-color: rgba(245, 158, 11, 0.3);">
+        <div class="sensor-ctrl-header">
+          <span style="color: #fbbf24;">⚠️ SAFETY ALARM LIMIT:</span>
+          <span id="ctrlThreshValDisplay" style="color: #fbbf24; font-family: monospace; font-weight: 900;">CH4 >= 25.0%</span>
+        </div>
+        <input type="range" id="sliderThreshold" class="sensor-ctrl-slider" min="10" max="50" step="2.5" value="25" oninput="onUserThresholdSliderChange(this.value)" />
+      </div>
+
+      <!-- Quick Disaster Scenario Presets -->
+      <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; margin-top: 4px;">ONE-CLICK HAZARD SCENARIOS:</div>
+      <div class="scenario-btn-grid">
+        <button class="scenario-btn" onclick="triggerHazardScenario('safe')" style="border-color: rgba(16,185,129,0.3); color: var(--neon-green);">
+          <span>🟢</span> All Safe
+        </button>
+        <button class="scenario-btn" onclick="triggerHazardScenario('gas')" style="border-color: rgba(245,158,11,0.4); color: #fbbf24;">
+          <span>⚠️</span> Gas Leak
+        </button>
+        <button class="scenario-btn" onclick="triggerHazardScenario('flood')" style="border-color: rgba(6,182,212,0.4); color: #38bdf8;">
+          <span>🌊</span> Sump Flood
+        </button>
+        <button class="scenario-btn" onclick="triggerHazardScenario('disaster')" style="border-color: rgba(239,68,68,0.4); color: var(--neon-red);">
+          <span>🚨</span> Total Disaster
+        </button>
       </div>
     </div>
 
@@ -936,7 +1457,7 @@
     </div>
 
     <!-- Live Event History Stream -->
-    <div class="glass-card col-8">
+    <div class="glass-card col-12">
       <div class="card-header">
         <span class="card-title">Live Multi-Hop Mesh Protocol Stream</span>
         <span onclick="clearLog()" style="cursor: pointer; font-size: 0.7rem; color: var(--cyan-glow);">CLEAR LOG</span>
@@ -955,31 +1476,54 @@
   <script>
     // --- Configuration Constants ---
     const BROKER_HOST = 'broker.emqx.io';
-    const BROKER_PORT = (window.location.protocol === 'https:') ? 8084 : 8083;
+    const isSecureWs  = (window.location.protocol === 'https:' || window.location.protocol === 'file:');
+    const BROKER_PORT = isSecureWs ? 8084 : 8083;
+    const BROKER_PROTO= isSecureWs ? 'wss' : 'ws';
     const BROKER_PATH = '/mqtt';
     const CLIENT_ID   = 'MineDashOpt_' + Math.random().toString(16).substring(2, 8);
 
+    // --- Engine Operational Mode & State ---
+    let operationalMode = 'MANUAL'; // 'MANUAL' (Wokwi / Hardware Standby) | 'AUTONOMOUS'
+    let isWokwiConnected = false;
+    let isHardwareLive = false;
+    let lastHardwarePacketTime = 0;
+    let wokwiActiveNodes = new Set();
+    let autonomousEngineActive = false; // Initially false until Wokwi starts or switched to AUTONOMOUS
+
+    let dashboardSeqNumber = 100;
+    let dashboardBatteryPct = 92.0;
+
     // --- Subterranean Mine Blueprint & Mesh Engine State ---
     const DEFAULT_NODES = {
-      R1A:     { x: 250, y: 120, label: "R1A (Vent North)" },
-      R1B:     { x: 250, y: 330, label: "R1B (Sump South)" },
-      R2:      { x: 490, y: 120, label: "R2 (Mid Upper)" },
-      R3:      { x: 490, y: 330, label: "R3 (Mid Lower)" },
-      R4A:     { x: 740, y: 120, label: "R4A (Shaft North)" },
-      R4B:     { x: 740, y: 330, label: "R4B (Shaft South)" },
-      GATEWAY: { x: 915, y: 225, label: "GATEWAY (Pithead)" }
+      R1A:     { x: 240, y: 95,  label: "R1A (North Gallery)" },
+      R1B:     { x: 195, y: 335, label: "R1B (Lower Sump Adit)" },
+      R2:      { x: 410, y: 220, label: "R2 (Central Haulage Junction)" },
+      R3:      { x: 530, y: 365, label: "R3 (Deep Sump Basin)" },
+      R4A:     { x: 690, y: 105, label: "R4A (East Vent Incline)" },
+      R4B:     { x: 740, y: 220, label: "R4B (Haulage Exit Portal)" },
+      GATEWAY: { x: 925, y: 220, label: "GATEWAY (Surface Pithead)" }
     };
 
     let nodeCoords = JSON.parse(JSON.stringify(DEFAULT_NODES));
+    // All nodes initially OFF (Standby) until Wokwi starts or Autonomous mode is triggered
     let nodePower = {
-      ROVER: true,
-      R1A: true,
-      R1B: true,
-      R2: true,
-      R3: true,
-      R4A: true,
-      R4B: true,
-      GATEWAY: true
+      ROVER: false,
+      R1A: false,
+      R1B: false,
+      R2: false,
+      R3: false,
+      R4A: false,
+      R4B: false,
+      GATEWAY: false
+    };
+
+    // Live User Sensor Overrides (Dashboard Direct Control)
+    let userSensorOverrides = {
+      methane: 16.5,
+      temperature: 29.2,
+      humidity: 65.0,
+      water: 0,
+      person: 0
     };
 
     // Rover Position & Radio Coverage Specs
@@ -1159,7 +1703,7 @@
         roverG.setAttribute('transform', `translate(${roverPos.x}, ${roverPos.y})`);
         const roverRing = document.getElementById('nodeRing-ROVER');
         if (roverRing) {
-          roverRing.className = `node-outer-ring online ${shortestRoute ? 'in-path' : ''}`;
+          roverRing.className = `node-outer-ring ${nodePower.ROVER ? 'online' : 'offline'} ${(nodePower.ROVER && shortestRoute) ? 'in-path' : ''}`;
         }
         const sub = document.getElementById('svgSub-ROVER');
         if (sub) {
@@ -1187,7 +1731,30 @@
         coordsBadge.innerText = `🚜 ROVER: (X: ${Math.round(roverPos.x)}m, Y: ${Math.round(roverPos.y)}m)${nearMsg}`;
       }
 
-      if (shortestRoute) {
+      const allNodesOff = Object.values(nodePower).every(v => v === false);
+
+      if (allNodesOff) {
+        if (operationalMode === 'MANUAL') {
+          routeBanner.innerHTML = `<span style="color:var(--text-muted); font-weight:700;">⏳ HARDWARE STANDBY — WOKWI SIMULATION IS OFF (GATEWAY, ROVER & RELAYS DISCONNECTED)</span>`;
+          metricBanner.innerText = `WOKWI OFF | WAITING FOR ESP32 HARDWARE VIA MQTT`;
+          metricBanner.style.color = 'var(--text-muted)';
+        } else {
+          routeBanner.innerHTML = `<span style="color:var(--neon-amber); font-weight:700;">⚡ AUTONOMOUS STANDBY — ACTIVATE NODES VIA TERMINAL OR AUTONOMOUS LOOP</span>`;
+          metricBanner.innerText = `STANDBY | 0 Active Nodes`;
+          metricBanner.style.color = 'var(--neon-amber)';
+        }
+        if (topHop) topHop.innerText = `STANDBY`;
+      } else if (!nodePower.ROVER) {
+        routeBanner.innerHTML = `<span style="color:var(--neon-red); font-weight:700;">🚜 ROVER DISCONNECTED — START ROVER IN TERMINAL / WOKWI TO RESUME</span>`;
+        metricBanner.innerText = `ROVER INACTIVE | 0 Hops`;
+        metricBanner.style.color = 'var(--neon-red)';
+        if (topHop) topHop.innerText = `OFF`;
+      } else if (!nodePower.GATEWAY) {
+        routeBanner.innerHTML = `<span style="color:var(--neon-red); font-weight:700;">📡 BASE STATION GATEWAY DISCONNECTED — UNABLE TO REACH SURFACE PORTAL</span>`;
+        metricBanner.innerText = `GATEWAY DOWN | 0 Hops Reachable`;
+        metricBanner.style.color = 'var(--neon-red)';
+        if (topHop) topHop.innerText = `NO GW`;
+      } else if (shortestRoute) {
         const hopCount = shortestRoute.length - 1;
         const latency = hopCount * 24;
         routeBanner.innerHTML = shortestRoute.map(n => `<span style="color:#fff; font-weight:800;">${n}</span>`).join(' ➔ ');
@@ -1207,33 +1774,192 @@
         if (topHop) topHop.innerText = `CUT OFF`;
       }
 
-      // 5. Update Switch Cards
+      // 5. Update Read-Only Switch Cards
       renderNodeSwitchGrid();
+
+      // 6. Update Hardware Connection Banner and Chips
+      updateHardwareConnectionUI();
     }
 
     function refreshTopologyAndRoute() {
       renderAllMapElements();
     }
 
-    // Dynamic Switch Grid
+    // Hardware Connection Status Monitor
+    function updateHardwareConnectionUI() {
+      const banner = document.getElementById('hardwareConnectionBanner');
+      const title = document.getElementById('hwBannerTitle');
+      const sub = document.getElementById('hwBannerSub');
+
+      const chipGw = document.getElementById('chipHwGateway');
+      const valGw = document.getElementById('chipValGateway');
+      const chipRov = document.getElementById('chipHwRover');
+      const valRov = document.getElementById('chipValRover');
+      const chipRel = document.getElementById('chipHwRelays');
+      const valRel = document.getElementById('chipValRelays');
+
+      // Count online relay nodes (all nodes except GATEWAY)
+      const relayKeys = Object.keys(nodeCoords).filter(k => k !== 'GATEWAY');
+      const onlineRelays = relayKeys.filter(k => !!nodePower[k]);
+      const totalRelays = relayKeys.length;
+      const areRelaysConnected = (onlineRelays.length > 0);
+
+      const isGwConnected = !!nodePower.GATEWAY;
+      const isRovConnected = !!nodePower.ROVER;
+      const allKeyNodesConnected = isGwConnected && isRovConnected && (onlineRelays.length >= Math.min(3, totalRelays));
+
+      if (operationalMode === 'AUTONOMOUS') {
+        // --- AUTONOMOUS MODE DISPLAY ---
+        if (isHardwareLive) {
+          if (banner) {
+            banner.className = 'hardware-connection-banner connected';
+            title.innerText = 'AUTONOMOUS PATROL ACTIVE & HARDWARE LINK LIVE';
+            sub.innerText = 'Rover is navigating subterranean waypoints automatically with active hardware telemetry synchronization.';
+          }
+          if (chipGw && valGw) {
+            chipGw.className = 'hw-chip connected';
+            valGw.innerText = 'CONNECTED SUCCESSFULLY';
+          }
+          if (chipRov && valRov) {
+            chipRov.className = 'hw-chip connected';
+            valRov.innerText = 'AUTONOMOUS (CONNECTED)';
+          }
+          if (chipRel && valRel) {
+            chipRel.className = 'hw-chip connected';
+            valRel.innerText = `CONNECTED (${onlineRelays.length}/${totalRelays} ONLINE)`;
+          }
+        } else {
+          // Hardware terminal is OFF, running standalone autonomous software simulation
+          if (banner) {
+            banner.className = 'hardware-connection-banner autonomous';
+            title.innerText = 'AUTONOMOUS PATROL ACTIVE (WOKWI HARDWARE: DISCONNECTED)';
+            sub.innerText = 'Rover is navigating subterranean mine waypoints automatically. Wokwi hardware terminal is currently offline.';
+          }
+          if (chipGw && valGw) {
+            chipGw.className = 'hw-chip disconnected';
+            valGw.innerText = 'STANDBY (HW OFF)';
+          }
+          if (chipRov && valRov) {
+            chipRov.className = 'hw-chip partial';
+            valRov.innerText = 'AUTO PATROL (HW OFF)';
+          }
+          if (chipRel && valRel) {
+            chipRel.className = 'hw-chip partial';
+            valRel.innerText = `SOFTWARE MESH (${onlineRelays.length}/${totalRelays} ACTIVE)`;
+          }
+        }
+
+        const modePill = document.getElementById('modeStatusPill');
+        const modeText = document.getElementById('modeStatusText');
+        if (modePill && modeText) {
+          modePill.className = 'status-pill auto-mode';
+          modeText.innerText = isHardwareLive ? 'AUTONOMOUS + HW LIVE' : 'AUTONOMOUS: SIM LIVE';
+        }
+
+      } else {
+        // --- MANUAL / WOKWI MODE DISPLAY ---
+        if (isHardwareLive && allKeyNodesConnected) {
+          if (banner) {
+            banner.className = 'hardware-connection-banner connected';
+            title.innerText = 'WOKWI SIMULATION LIVE — GATEWAY, ROVER & RELAY NODES CONNECTED SUCCESSFULLY';
+            sub.innerText = 'Subterranean wireless telemetry mesh established across all active hardware nodes.';
+          }
+          if (chipGw && valGw) {
+            chipGw.className = 'hw-chip connected';
+            valGw.innerText = 'CONNECTED SUCCESSFULLY';
+          }
+          if (chipRov && valRov) {
+            chipRov.className = 'hw-chip connected';
+            valRov.innerText = 'CONNECTED SUCCESSFULLY';
+          }
+          if (chipRel && valRel) {
+            chipRel.className = 'hw-chip connected';
+            valRel.innerText = `CONNECTED SUCCESSFULLY (${onlineRelays.length}/${totalRelays} ONLINE)`;
+          }
+        } else if (isHardwareLive && (isGwConnected || isRovConnected || areRelaysConnected)) {
+          if (banner) {
+            banner.className = 'hardware-connection-banner partial';
+            title.innerText = 'PARTIAL HARDWARE LINK DETECTED';
+            sub.innerText = `Gateway: ${isGwConnected ? 'CONNECTED' : 'OFFLINE'} | Rover: ${isRovConnected ? 'CONNECTED' : 'OFFLINE'} | Relays: ${onlineRelays.length}/${totalRelays} Online`;
+          }
+          if (chipGw && valGw) {
+            chipGw.className = isGwConnected ? 'hw-chip connected' : 'hw-chip disconnected';
+            valGw.innerText = isGwConnected ? 'CONNECTED SUCCESSFULLY' : 'NOT CONNECTED';
+          }
+          if (chipRov && valRov) {
+            chipRov.className = isRovConnected ? 'hw-chip connected' : 'hw-chip disconnected';
+            valRov.innerText = isRovConnected ? 'CONNECTED SUCCESSFULLY' : 'NOT CONNECTED';
+          }
+          if (chipRel && valRel) {
+            chipRel.className = areRelaysConnected ? 'hw-chip partial' : 'hw-chip disconnected';
+            valRel.innerText = areRelaysConnected ? `CONNECTED (${onlineRelays.length}/${totalRelays} ONLINE)` : `NOT CONNECTED (0/${totalRelays} ONLINE)`;
+          }
+        } else {
+          // Hardware is unequivocally disconnected
+          if (banner) {
+            banner.className = 'hardware-connection-banner disconnected';
+            title.innerText = 'WOKWI SIMULATION IS OFF — HARDWARE DISCONNECTED';
+            sub.innerText = 'Start Wokwi simulation or python run_all_nodes.py in terminal to connect Gateway, Rover, and Relay nodes.';
+          }
+          if (chipGw && valGw) {
+            chipGw.className = 'hw-chip disconnected';
+            valGw.innerText = 'NOT CONNECTED';
+          }
+          if (chipRov && valRov) {
+            chipRov.className = 'hw-chip disconnected';
+            valRov.innerText = 'NOT CONNECTED';
+          }
+          if (chipRel && valRel) {
+            chipRel.className = 'hw-chip disconnected';
+            valRel.innerText = `NOT CONNECTED (0/${totalRelays} ONLINE)`;
+          }
+        }
+
+        const modePill = document.getElementById('modeStatusPill');
+        const modeText = document.getElementById('modeStatusText');
+        if (modePill && modeText) {
+          if (isHardwareLive && allKeyNodesConnected) {
+            modePill.className = 'status-pill wokwi-live';
+            modeText.innerText = 'WOKWI LIVE: ALL CONNECTED';
+          } else if (isHardwareLive) {
+            modePill.className = 'status-pill wokwi-live';
+            modeText.innerText = `WOKWI: ${wokwiActiveNodes.size} NODES`;
+          } else {
+            modePill.className = 'status-pill offline';
+            modeText.innerText = 'WOKWI OFF: DISCONNECTED';
+          }
+        }
+      }
+    }
+
+    // Read-Only Node Hardware Telemetry Cards (Controlled via Terminal only)
     function renderNodeSwitchGrid() {
       const grid = document.getElementById('nodeSwitchGrid');
       if (!grid) return;
 
+      const isRovOnline = !!nodePower.ROVER;
       let html = `
-        <div class="node-toggle-card" onclick="toggleNodePower('ROVER')">
+        <div class="node-toggle-card read-only" title="ROVER status • Power authority resides in Terminal / Wokwi">
           <span class="toggle-title">🚜 ROVER</span>
-          <button id="btnPower-ROVER" class="power-switch-btn ${nodePower.ROVER ? 'on' : 'off'}">${nodePower.ROVER ? 'ON' : 'OFF'}</button>
+          <span class="power-status-badge ${isRovOnline ? 'connected' : 'disconnected'}">
+            <span class="status-mini-dot"></span>
+            ${isRovOnline ? 'CONNECTED' : 'NOT CONNECTED'}
+          </span>
         </div>
       `;
 
       for (const nodeId of Object.keys(nodeCoords)) {
         const isOnline = !!nodePower[nodeId];
+        const isGateway = (nodeId === 'GATEWAY');
+        const icon = isGateway ? '📡 ' : '📶 ';
         const label = nodeCoords[nodeId].label || `${nodeId} (Relay)`;
         html += `
-          <div class="node-toggle-card" onclick="toggleNodePower('${nodeId}')">
-            <span class="toggle-title" title="${label}">${nodeId}</span>
-            <button id="btnPower-${nodeId}" class="power-switch-btn ${isOnline ? 'on' : 'off'}">${isOnline ? 'ON' : 'OFF'}</button>
+          <div class="node-toggle-card read-only" title="${label} • Power authority resides in Terminal / Wokwi">
+            <span class="toggle-title">${icon}${nodeId}</span>
+            <span class="power-status-badge ${isOnline ? 'connected' : 'disconnected'}">
+              <span class="status-mini-dot"></span>
+              ${isOnline ? 'CONNECTED' : 'NOT CONNECTED'}
+            </span>
           </div>
         `;
       }
@@ -1288,18 +2014,94 @@
         wrapper.classList.toggle('delete-mode-active', isDeleteMode);
       }
 
+      const teleTitle = document.getElementById('teleopAuthorityTitle');
+      const teleDesc = document.getElementById('teleopAuthorityDesc');
+      const teleDot = document.getElementById('teleopDot');
+
+      if (teleTitle && teleDesc && teleDot) {
+        if (operationalMode === 'AUTONOMOUS') {
+          teleTitle.innerText = 'AUTONOMOUS PATROL ACTIVE';
+          teleTitle.style.color = 'var(--cyan-glow)';
+          teleDesc.innerText = 'Waypoint patrol 1-16 looping automatically';
+          teleDot.style.background = 'var(--cyan-glow)';
+          teleDot.style.boxShadow = '0 0 8px var(--cyan-glow)';
+        } else {
+          teleTitle.innerText = 'TERMINAL CONTROL ONLY';
+          teleTitle.style.color = '#38bdf8';
+          teleDesc.innerText = 'Drive via Arrows / IJKL in run_all_nodes.py';
+          teleDot.style.background = '#38bdf8';
+          teleDot.style.boxShadow = '0 0 8px #38bdf8';
+        }
+      }
+
       if (label) {
+        const allNodesOff = Object.values(nodePower).every(v => v === false);
         if (isAddMode) {
           label.innerText = '📍 PLACEMENT ACTIVE: CLICK ON THE MINE FLOOR TO DROP A RELAY NODE';
           label.style.color = '#00f0ff';
         } else if (isDeleteMode) {
           label.innerText = '🗑️ DELETION ACTIVE: CLICK ANY RELAY NODE TO REMOVE FROM NETWORK';
           label.style.color = 'var(--neon-red)';
+        } else if (allNodesOff && operationalMode === 'MANUAL') {
+          label.innerText = '⏳ ALL NODES STANDBY: START WOKWI SIMULATION OR SWITCH TO AUTONOMOUS MODE';
+          label.style.color = '#94a3b8';
+        } else if (allNodesOff && operationalMode === 'AUTONOMOUS') {
+          label.innerText = '⚡ ALL NODES OFF: CLICK "ALL ON" OR POWER NODES TO BEGIN SIMULATION';
+          label.style.color = 'var(--neon-amber)';
+        } else if (operationalMode === 'AUTONOMOUS') {
+          label.innerText = '🤖 AUTONOMOUS ROVER PATROL ACTIVE: NAVIGATING MINE TUNNELS AUTOMATICALLY';
+          label.style.color = 'var(--cyan-glow)';
         } else {
-          label.innerText = '🎮 MOVE ROVER: ARROWS / WASD / CLICK TO DRIVE / DRAG';
+          label.innerText = '⌨️ TERMINAL CONTROL ONLY: USE ARROWS / IJKL IN RUN_ALL_NODES.PY (DASHBOARD DRIVING DISABLED)';
           label.style.color = '#38bdf8';
         }
       }
+    }
+
+    function setOperationalMode(mode) {
+      operationalMode = mode;
+      const btnManual = document.getElementById('btnModeManual');
+      const btnAuto = document.getElementById('btnModeAuto');
+      const modePill = document.getElementById('modeStatusPill');
+      const modeText = document.getElementById('modeStatusText');
+
+      if (mode === 'AUTONOMOUS') {
+        autonomousEngineActive = true;
+        if (btnAuto) btnAuto.classList.add('active');
+        if (btnManual) btnManual.classList.remove('active');
+        if (modePill) modePill.className = 'status-pill auto-mode';
+        if (modeText) modeText.innerText = isHardwareLive ? 'AUTONOMOUS + HW LIVE' : 'AUTONOMOUS: SIM LIVE';
+
+        // Power nodes for local software autonomous simulation loop
+        for (const n in nodePower) nodePower[n] = true;
+        appendLog('[MODE SWITCH]', 'Switched to AUTONOMOUS Mode: Rover patrolling waypoints automatically.', 'system');
+
+        startAutoPatrol();
+        renderAllMapElements();
+        emitAutonomousMeshCycle(true);
+
+      } else { // MANUAL
+        autonomousEngineActive = false;
+        stopAutoPatrol();
+        if (btnManual) btnManual.classList.add('active');
+        if (btnAuto) btnAuto.classList.remove('active');
+
+        // If hardware terminal is not actively sending packets, all nodes stay OFFLINE in standby
+        if (!isHardwareLive) {
+          for (const n in nodePower) nodePower[n] = false;
+          wokwiActiveNodes.clear();
+          isWokwiConnected = false;
+          if (modePill) modePill.className = 'status-pill offline';
+          if (modeText) modeText.innerText = 'WAITING FOR WOKWI';
+        } else {
+          if (modePill) modePill.className = 'status-pill wokwi-live';
+          if (modeText) modeText.innerText = `WOKWI LIVE (${wokwiActiveNodes.size} NODES)`;
+        }
+
+        appendLog('[MODE SWITCH]', 'Switched to MANUAL / WOKWI Mode: Standalone simulation halted. Waiting for terminal teleoperation.', 'alert');
+        renderAllMapElements();
+      }
+      updateModeVisuals();
     }
 
     function handleNodeClick(nodeId, event) {
@@ -1314,8 +2116,16 @@
         delete nodePower[nodeId];
         appendLog('[DECOMMISSION]', `Relay node ${nodeId} deleted from subterranean mesh.`, 'alert');
         renderAllMapElements();
+        if (client && client.connected) {
+          client.publish('mine/mesh/delete_relay', JSON.stringify({
+            senderId: CLIENT_ID,
+            node: nodeId
+          }));
+        }
+        emitAutonomousMeshCycle(true);
       } else {
-        toggleNodePower(nodeId);
+        const isOnline = !!nodePower[nodeId];
+        appendLog('[NODE TELEMETRY]', `Node ${nodeId} is currently ${isOnline ? 'CONNECTED (ONLINE)' : 'DISCONNECTED (OFFLINE)'}. Node power is controlled strictly via TERMINAL (run_all_nodes.py) / Wokwi.`, 'system');
       }
     }
 
@@ -1330,47 +2140,423 @@
     function addRelayNodeAt(x, y) {
       const name = getNextRelayName();
       nodeCoords[name] = { x: Math.round(x), y: Math.round(y), label: `${name} (Field Relay)` };
-      nodePower[name] = true;
+      nodePower[name] = (operationalMode === 'AUTONOMOUS');
       isAddMode = false;
       updateModeVisuals();
       appendLog('[MESH EXPANSION]', `Deployed new relay station ${name} at (${Math.round(x)}m, ${Math.round(y)}m).`, 'fwd');
       renderAllMapElements();
+
+      // Notify Terminal Engine & MQTT mesh about newly deployed relay station
+      if (client && client.connected) {
+        client.publish('mine/mesh/add_relay', JSON.stringify({
+          senderId: CLIENT_ID,
+          node: name,
+          x: Math.round(x),
+          y: Math.round(y)
+        }));
+      }
+      emitAutonomousMeshCycle(true);
     }
 
     function restoreDefaultBlueprint() {
       nodeCoords = JSON.parse(JSON.stringify(DEFAULT_NODES));
-      for (const n in nodeCoords) nodePower[n] = true;
-      nodePower.ROVER = true;
+      for (const n in nodeCoords) nodePower[n] = (operationalMode === 'AUTONOMOUS');
+      nodePower.ROVER = (operationalMode === 'AUTONOMOUS');
       isAddMode = false;
       isDeleteMode = false;
       roverPos = { x: 95, y: 225 };
       updateModeVisuals();
       appendLog('[RESTORE]', 'Subterranean blueprint reset to default 8-node network.', 'fwd');
       renderAllMapElements();
+
+      if (client && client.connected) {
+        client.publish('mine/mesh/reset_relays', JSON.stringify({
+          senderId: CLIENT_ID
+        }));
+      }
+      emitAutonomousMeshCycle(true);
     }
 
-    // Rover Navigation & Drag Handlers
+    // Randomize / Scatter Relay Stations Across Diverse Mine Shaft Tunnels
+    function scatterRelayNodesRandomly() {
+      const tunnelAnchorZones = [
+        { name: "North Gallery Drift",   minX: 210, maxX: 330, minY: 75,  maxY: 115 },
+        { name: "West Sump Chute",       minX: 180, maxX: 260, minY: 310, maxY: 360 },
+        { name: "Central Haulage Rails", minX: 350, maxX: 460, minY: 200, maxY: 245 },
+        { name: "Deep Sump Reservoir",   minX: 470, maxX: 580, minY: 330, maxY: 380 },
+        { name: "North-East Incline",    minX: 630, maxX: 740, minY: 80,  maxY: 125 },
+        { name: "East Haulage Junction", minX: 690, maxX: 810, minY: 200, maxY: 245 },
+        { name: "Central Ore Raise",     minX: 440, maxX: 530, minY: 140, maxY: 190 },
+        { name: "Crosscut Bypass",       minX: 270, maxX: 350, minY: 140, maxY: 210 }
+      ];
+
+      const shuffledZones = [...tunnelAnchorZones].sort(() => Math.random() - 0.5);
+      const relayKeys = Object.keys(nodeCoords).filter(k => k !== 'GATEWAY');
+
+      relayKeys.forEach((key, idx) => {
+        const zone = shuffledZones[idx % shuffledZones.length];
+        const randX = Math.round(zone.minX + Math.random() * (zone.maxX - zone.minX));
+        const randY = Math.round(zone.minY + Math.random() * (zone.maxY - zone.minY));
+        nodeCoords[key].x = randX;
+        nodeCoords[key].y = randY;
+      });
+
+      renderAllMapElements();
+      appendLog('[TOPOLOGY SCATTER]', 'Relay nodes dynamically randomized across diverse subterranean tunnels!', 'fwd');
+      broadcastHealthToMqtt();
+      emitAutonomousMeshCycle(true);
+    }
+
+    // --- Interactive Live Environment Sensor Controls ---
+    function onUserSensorSliderChange(type, val) {
+      val = parseFloat(val);
+      if (type === 'methane') {
+        userSensorOverrides.methane = val;
+        const disp = document.getElementById('ctrlMethaneValDisplay');
+        if (disp) {
+          disp.innerText = `${val.toFixed(1)}% LEL`;
+          disp.style.color = val >= currentMethaneThreshold ? 'var(--neon-red)' : (val >= currentMethaneThreshold * 0.65 ? 'var(--neon-amber)' : 'var(--cyan-glow)');
+        }
+      } else if (type === 'temp') {
+        userSensorOverrides.temperature = val;
+        const disp = document.getElementById('ctrlTempValDisplay');
+        if (disp) {
+          disp.innerText = `${val.toFixed(1)}°C`;
+          disp.style.color = val >= currentTempThreshold ? 'var(--neon-red)' : '#fb923c';
+        }
+      }
+      broadcastSensorOverridesToMqtt();
+      emitAutonomousMeshCycle(true);
+    }
+
+    function applySensorPreset(type, val) {
+      if (type === 'methane') {
+        const slider = document.getElementById('sliderMethane');
+        if (slider) slider.value = val;
+        onUserSensorSliderChange('methane', val);
+      } else if (type === 'temp') {
+        const slider = document.getElementById('sliderTemp');
+        if (slider) slider.value = val;
+        onUserSensorSliderChange('temp', val);
+      }
+    }
+
+    function toggleWaterOverride() {
+      userSensorOverrides.water = userSensorOverrides.water === 1 ? 0 : 1;
+      const lbl = document.getElementById('btnWaterLabel');
+      const btn = document.getElementById('btnToggleWater');
+      if (userSensorOverrides.water === 1) {
+        lbl.innerText = 'FLOOD ACTIVE';
+        lbl.style.color = 'var(--neon-red)';
+        btn.style.borderColor = 'rgba(239, 68, 68, 0.6)';
+        btn.style.background = 'rgba(239, 68, 68, 0.2)';
+      } else {
+        lbl.innerText = 'DRY';
+        lbl.style.color = 'var(--neon-green)';
+        btn.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+        btn.style.background = 'rgba(15, 23, 42, 0.85)';
+      }
+      broadcastSensorOverridesToMqtt();
+      emitAutonomousMeshCycle(true);
+    }
+
+    function togglePersonOverride() {
+      userSensorOverrides.person = userSensorOverrides.person === 1 ? 0 : 1;
+      const lbl = document.getElementById('btnPersonLabel');
+      const btn = document.getElementById('btnTogglePerson');
+      if (userSensorOverrides.person === 1) {
+        lbl.innerText = 'TARGET ACQUIRED';
+        lbl.style.color = 'var(--neon-red)';
+        btn.style.borderColor = 'rgba(239, 68, 68, 0.6)';
+        btn.style.background = 'rgba(239, 68, 68, 0.2)';
+      } else {
+        lbl.innerText = 'SCANNING';
+        lbl.style.color = '#94a3b8';
+        btn.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+        btn.style.background = 'rgba(15, 23, 42, 0.85)';
+      }
+      broadcastSensorOverridesToMqtt();
+      emitAutonomousMeshCycle(true);
+    }
+
+    function onUserThresholdSliderChange(val) {
+      currentMethaneThreshold = parseFloat(val);
+      const disp = document.getElementById('ctrlThreshValDisplay');
+      if (disp) disp.innerText = `CH4 >= ${currentMethaneThreshold.toFixed(1)}%`;
+      const tDisp = document.getElementById('methaneThreshDisplay');
+      if (tDisp) tDisp.innerText = `THRESHOLD: ${currentMethaneThreshold.toFixed(1)}% LEL`;
+      broadcastSensorOverridesToMqtt();
+      emitAutonomousMeshCycle(true);
+    }
+
+    function triggerHazardScenario(scenario) {
+      if (scenario === 'safe') {
+        userSensorOverrides = { methane: 15.5, temperature: 28.5, humidity: 62.0, water: 0, person: 0 };
+        currentMethaneThreshold = 25.0;
+      } else if (scenario === 'gas') {
+        userSensorOverrides.methane = 52.0;
+        userSensorOverrides.water = 0;
+      } else if (scenario === 'flood') {
+        userSensorOverrides.water = 1;
+        userSensorOverrides.methane = 18.0;
+      } else if (scenario === 'disaster') {
+        userSensorOverrides = { methane: 62.5, temperature: 48.0, humidity: 95.0, water: 1, person: 1 };
+      }
+
+      // Sync sliders UI
+      const sM = document.getElementById('sliderMethane');
+      if (sM) sM.value = userSensorOverrides.methane;
+      const dispM = document.getElementById('ctrlMethaneValDisplay');
+      if (dispM) {
+        dispM.innerText = `${userSensorOverrides.methane.toFixed(1)}% LEL`;
+        dispM.style.color = userSensorOverrides.methane >= currentMethaneThreshold ? 'var(--neon-red)' : 'var(--cyan-glow)';
+      }
+
+      const sT = document.getElementById('sliderTemp');
+      if (sT) sT.value = userSensorOverrides.temperature;
+      const dispT = document.getElementById('ctrlTempValDisplay');
+      if (dispT) dispT.innerText = `${userSensorOverrides.temperature.toFixed(1)}°C`;
+
+      const wLbl = document.getElementById('btnWaterLabel');
+      if (wLbl) {
+        wLbl.innerText = userSensorOverrides.water ? 'FLOOD ACTIVE' : 'DRY';
+        wLbl.style.color = userSensorOverrides.water ? 'var(--neon-red)' : 'var(--neon-green)';
+      }
+
+      const pLbl = document.getElementById('btnPersonLabel');
+      if (pLbl) {
+        pLbl.innerText = userSensorOverrides.person ? 'TARGET ACQUIRED' : 'SCANNING';
+        pLbl.style.color = userSensorOverrides.person ? 'var(--neon-red)' : '#94a3b8';
+      }
+
+      broadcastSensorOverridesToMqtt();
+      emitAutonomousMeshCycle(true);
+      appendLog('[SCENARIO OVERRIDE]', `Applied hazard preset: ${scenario.toUpperCase()}`, scenario === 'safe' ? 'fwd' : 'alert');
+    }
+
+    function broadcastSensorOverridesToMqtt() {
+      if (client && client.connected) {
+        const payload = {
+          methane: userSensorOverrides.methane,
+          temperature: userSensorOverrides.temperature,
+          humidity: userSensorOverrides.humidity,
+          water: userSensorOverrides.water === 1,
+          person: userSensorOverrides.person === 1,
+          methane_max: currentMethaneThreshold,
+          temp_max: currentTempThreshold
+        };
+        client.publish('mine/dashboard/set_sensors', JSON.stringify(payload));
+      }
+    }
+
+    function broadcastHealthToMqtt() {
+      // Dashboard does not broadcast node health (authority is strictly Terminal / Wokwi hardware)
+    }
+
+    // --- Autonomous Mesh Engine (Telemetry Generation & MQTT Transmission) ---
+    function toggleAutonomousEngine() {
+      autonomousEngineActive = !autonomousEngineActive;
+      const pill = document.getElementById('meshEnginePill');
+      const text = document.getElementById('meshEngineText');
+
+      if (autonomousEngineActive) {
+        if (pill) pill.className = 'engine-pill';
+        if (text) text.innerText = 'Autonomous Engine: LIVE';
+        appendLog('[AUTONOMOUS ENGINE]', 'Autonomous background telemetry broadcast resumed.', 'system');
+        emitAutonomousMeshCycle(true);
+      } else {
+        if (pill) pill.className = 'engine-pill paused';
+        if (text) text.innerText = 'Engine: STANDBY';
+        appendLog('[AUTONOMOUS ENGINE]', 'Autonomous broadcast paused (Manual / Standby mode).', 'alert');
+      }
+    }
+
+    function emitAutonomousMeshCycle(forceInstant = false) {
+      if (operationalMode !== 'AUTONOMOUS') return;
+      if (!autonomousEngineActive && !forceInstant) return;
+
+      const shortestRoute = computeShortestRoute("ROVER", "GATEWAY");
+      const isRoverOnline = !!nodePower.ROVER;
+      const isGatewayOnline = !!nodePower.GATEWAY;
+
+      dashboardSeqNumber++;
+      if (isRoverOnline) {
+        dashboardBatteryPct = Math.max(15, +(dashboardBatteryPct - 0.02).toFixed(2));
+      }
+
+      const mVal = Number(userSensorOverrides.methane.toFixed(1));
+      const tVal = Number(userSensorOverrides.temperature.toFixed(1));
+      const hVal = Number(userSensorOverrides.humidity.toFixed(0));
+
+      const isHazard = (
+        mVal >= currentMethaneThreshold ||
+        tVal >= currentTempThreshold ||
+        userSensorOverrides.water === 1 ||
+        userSensorOverrides.person === 1
+      );
+
+      const pathStr = (isRoverOnline && shortestRoute) ? shortestRoute.join('>') : "ISOLATED";
+      const hops = (isRoverOnline && shortestRoute) ? (shortestRoute.length - 1) : 0;
+
+      const packet = {
+        senderId: CLIENT_ID,
+        node: "ROVER",
+        seq: dashboardSeqNumber,
+        timestamp: Date.now(),
+        methane: mVal,
+        methane_status: (mVal >= currentMethaneThreshold) ? "ALERT" : "NORMAL",
+        temperature: tVal,
+        humidity: hVal,
+        water: userSensorOverrides.water,
+        person: userSensorOverrides.person,
+        battery: Math.round(dashboardBatteryPct),
+        alert: isHazard ? 1 : 0,
+        path: pathStr,
+        hops: hops,
+        thresholds: {
+          methane_max: currentMethaneThreshold,
+          temp_max: currentTempThreshold
+        }
+      };
+
+      // Update local dashboard UI immediately
+      handleDataPacket(packet, true);
+
+      // Publish directly over MQTT so ANY external subscriber receives it
+      if (client && client.connected) {
+        if (isRoverOnline && isGatewayOnline && shortestRoute) {
+          client.publish('mine/gateway/data', JSON.stringify(packet));
+
+          if (isHazard) {
+            const reasons = [];
+            if (mVal >= currentMethaneThreshold) reasons.push("METHANE DANGER");
+            if (tVal >= currentTempThreshold) reasons.push("HIGH HEAT");
+            if (userSensorOverrides.water === 1) reasons.push("WATER FLOOD");
+            if (userSensorOverrides.person === 1) reasons.push("PERSON DETECTED");
+
+            const alertDoc = {
+              senderId: CLIENT_ID,
+              seq: dashboardSeqNumber,
+              alert: 1,
+              methane: mVal,
+              water: userSensorOverrides.water,
+              person: userSensorOverrides.person,
+              path: pathStr,
+              timestamp: Date.now(),
+              reason: reasons.join(" | ")
+            };
+            client.publish('mine/gateway/alerts', JSON.stringify(alertDoc));
+          }
+        }
+      }
+    }
+
+    // --- Subterranean Mine Waypoint Patrol Route for Autonomous Mode ---
+    const MINE_PATROL_WAYPOINTS = [
+      { x: 95,  y: 225, name: "Sector 4-B Entry Portal" },
+      { x: 195, y: 160, name: "Crosscut 1A Bypass" },
+      { x: 240, y: 95,  name: "North Ventilation Drift (-160m)" },
+      { x: 340, y: 95,  name: "North Gallery East Drift" },
+      { x: 410, y: 220, name: "Central Haulage Way (-200m)" },
+      { x: 470, y: 220, name: "Ore Raise #2 Junction" },
+      { x: 530, y: 365, name: "Deep Sump Reservoir (-265m)" },
+      { x: 630, y: 310, name: "Winze #3 Drainage Crosscut" },
+      { x: 690, y: 105, name: "North-East Vent Incline" },
+      { x: 740, y: 220, name: "East Haulage Exit Portal" },
+      { x: 880, y: 220, name: "Pithead Surface Hoist Portal" },
+      { x: 740, y: 220, name: "East Haulage Return" },
+      { x: 530, y: 220, name: "Central Haulage Way Return" },
+      { x: 350, y: 220, name: "Main Gallery West Return" },
+      { x: 195, y: 335, name: "Lower Sump Adit Return" },
+      { x: 110, y: 270, name: "Sector 4-B Adit Return" }
+    ];
+
+    let currentWaypointIndex = 0;
+    let autoPatrolInterval = null;
+    let autoPatrolBroadcastThrottle = 0;
+
+    function stepAutonomousRoverPatrol() {
+      if (operationalMode !== 'AUTONOMOUS' || !autonomousEngineActive) return;
+
+      const target = MINE_PATROL_WAYPOINTS[currentWaypointIndex];
+      const dx = target.x - roverPos.x;
+      const dy = target.y - roverPos.y;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist < 8) {
+        currentWaypointIndex = (currentWaypointIndex + 1) % MINE_PATROL_WAYPOINTS.length;
+        const nextTarget = MINE_PATROL_WAYPOINTS[currentWaypointIndex];
+        appendLog('[AUTO PATROL]', `Rover reached ${target.name}. Navigating to ${nextTarget.name}...`, 'system');
+      } else {
+        const stepSpeed = 3.5;
+        const moveDist = Math.min(stepSpeed, dist);
+        roverPos.x += (dx / dist) * moveDist;
+        roverPos.y += (dy / dist) * moveDist;
+      }
+
+      roverPos.x = Math.max(50, Math.min(950, Math.round(roverPos.x * 10) / 10));
+      roverPos.y = Math.max(50, Math.min(400, Math.round(roverPos.y * 10) / 10));
+
+      renderAllMapElements();
+
+      // Broadcast rover's updated position to MQTT periodically so terminal is synchronized
+      const now = Date.now();
+      if (now - autoPatrolBroadcastThrottle > 500) {
+        autoPatrolBroadcastThrottle = now;
+        if (client && client.connected) {
+          client.publish('mine/rover/position', JSON.stringify({
+            x: Math.round(roverPos.x),
+            y: Math.round(roverPos.y),
+            waypoint: MINE_PATROL_WAYPOINTS[currentWaypointIndex].name,
+            mode: 'AUTONOMOUS'
+          }));
+        }
+      }
+    }
+
+    function startAutoPatrol() {
+      if (autoPatrolInterval) clearInterval(autoPatrolInterval);
+      autoPatrolInterval = setInterval(stepAutonomousRoverPatrol, 120);
+      appendLog('[AUTO NAV]', 'Autonomous waypoint patrol started. Rover is navigating mine tunnels automatically.', 'system');
+    }
+
+    function stopAutoPatrol() {
+      if (autoPatrolInterval) {
+        clearInterval(autoPatrolInterval);
+        autoPatrolInterval = null;
+      }
+    }
+
+    // Rover Teleoperation & Drag Handlers
     function driveRover(dx, dy) {
       roverPos.x = Math.max(50, Math.min(950, roverPos.x + dx));
       roverPos.y = Math.max(50, Math.min(400, roverPos.y + dy));
       renderAllMapElements();
+      emitAutonomousMeshCycle(true);
     }
 
     function driveRoverTo(x, y) {
       roverPos.x = Math.max(50, Math.min(950, Math.round(x)));
       roverPos.y = Math.max(50, Math.min(400, Math.round(y)));
       renderAllMapElements();
+      emitAutonomousMeshCycle(true);
     }
 
     function resetRoverPosition() {
       roverPos = { x: 95, y: 225 };
       renderAllMapElements();
+      emitAutonomousMeshCycle(true);
       appendLog('[ROVER]', 'Rover repositioned to Sector 4-B entry chamber.', 'fwd');
     }
 
     function startDragRover(e) {
       if (e) e.stopPropagation();
-      isDraggingRover = true;
+      // Dashboard dragging disabled per user specifications
+      if (operationalMode === 'AUTONOMOUS') {
+        appendLog('[ROVER NAV]', 'Rover dragging disabled: Autonomous waypoint patrol is active.', 'system');
+      } else {
+        appendLog('[ROVER NAV]', 'Rover dragging disabled: Use TERMINAL hotkeys (Arrows / IJKL in run_all_nodes.py) to teleoperate Rover over MQTT.', 'alert');
+      }
     }
 
     function getSvgCoordinates(e) {
@@ -1384,78 +2570,48 @@
       };
     }
 
-    // Keyboard Arrow Key / WASD Event Listener
+    // Keyboard Arrow Key / WASD Event Listener (Dashboard driving disabled, Terminal teleoperation only)
     window.addEventListener('keydown', (e) => {
-      const step = e.shiftKey ? 36 : 18;
-      let handled = false;
-
-      switch(e.key) {
-        case 'ArrowUp':
-        case 'w':
-        case 'W':
-          driveRover(0, -step);
-          handled = true;
-          break;
-        case 'ArrowDown':
-        case 's':
-        case 'S':
-          driveRover(0, step);
-          handled = true;
-          break;
-        case 'ArrowLeft':
-        case 'a':
-        case 'A':
-          driveRover(-step, 0);
-          handled = true;
-          break;
-        case 'ArrowRight':
-        case 'd':
-        case 'D':
-          driveRover(step, 0);
-          handled = true;
-          break;
-      }
-
-      if (handled) {
+      const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'W', 's', 'S', 'a', 'A', 'd', 'D'];
+      if (keys.includes(e.key)) {
         e.preventDefault();
+        if (operationalMode === 'AUTONOMOUS') {
+          appendLog('[ROVER NAV]', 'Rover is in AUTONOMOUS Patrol Mode. Navigating waypoints automatically.', 'system');
+        } else {
+          appendLog('[ROVER NAV]', 'Dashboard manual driving is DISABLED. Use TERMINAL hotkeys (Arrows / IJKL in run_all_nodes.py) to drive Rover over MQTT.', 'alert');
+        }
       }
     });
 
-    // Node Power Control
+    // Node Power Control (Dashboard controls removed - authority resides in Terminal / Wokwi)
     function toggleNodePower(node) {
-      if (!nodePower.hasOwnProperty(node)) return;
-
-      nodePower[node] = !nodePower[node];
-      const state = nodePower[node] ? "ONLINE" : "OFFLINE";
-      appendLog('[POWER CONTROL]', `Node ${node} switched ${state}.`, nodePower[node] ? 'fwd' : 'alert');
-
-      if (client && client.connected) {
-        client.publish('mine/dashboard/toggle_node', JSON.stringify({ node: node }));
-      }
-
-      renderAllMapElements();
+      appendLog('[CONTROL AUTHORITY]', `Dashboard power switching is disabled. Use TERMINAL keys (1-8 in run_all_nodes.py) or Wokwi slide switches to toggle ${node}.`, 'alert');
     }
 
     function restoreAllNodes() {
-      for (const n in nodePower) nodePower[n] = true;
-      appendLog('[RESTORE]', 'All mesh nodes powered ONLINE.', 'fwd');
-      renderAllMapElements();
+      appendLog('[CONTROL AUTHORITY]', `Dashboard power switching is disabled. Node power authority resides in TERMINAL (run_all_nodes.py) / Wokwi hardware simulation.`, 'alert');
     }
 
     // --- MQTT Connection via WebSockets ---
-    const brokerUrl = `${(window.location.protocol === 'https:') ? 'wss' : 'ws'}://${BROKER_HOST}:${BROKER_PORT}${BROKER_PATH}`;
+    const brokerUrl = `${BROKER_PROTO}://${BROKER_HOST}:${BROKER_PORT}${BROKER_PATH}`;
     const client = mqtt.connect(brokerUrl, {
       clientId: CLIENT_ID,
       clean: true,
-      connectTimeout: 5000,
+      connectTimeout: 7000,
       reconnectPeriod: 3000
     });
 
     client.on('connect', () => {
-      appendLog('[MQTT]', 'Connected to EMQX broker successfully.', 'system');
+      appendLog('[MQTT]', `Connected to EMQX broker successfully (${BROKER_PROTO}://${BROKER_HOST}:${BROKER_PORT}).`, 'system');
       updateGatewayBadge(true);
-      client.subscribe(['mine/gateway/data', 'mine/gateway/alerts', 'mine/gateway/node_health', 'node/status/+']);
+      client.subscribe(['mine/gateway/data', 'mine/gateway/alerts', 'mine/gateway/node_health', 'mine/gateway/status', 'node/status/+', 'mine/rover/position', 'mine/rover/move']);
+      broadcastSensorOverridesToMqtt();
       refreshTopologyAndRoute();
+    });
+
+    client.on('error', (err) => {
+      console.warn('MQTT Connection Error:', err);
+      updateGatewayBadge(false);
     });
 
     client.on('offline', () => {
@@ -1466,34 +2622,127 @@
       try {
         const data = JSON.parse(payload.toString());
 
-        if (topic === 'mine/gateway/data') {
-          handleDataPacket(data);
+        // Always ignore our own published packets echoed by the broker
+        if (data.senderId && data.senderId === CLIENT_ID) return;
+
+        if (topic === 'mine/gateway/status') {
+          if (data && data.online === false) {
+            isHardwareLive = false;
+            isWokwiConnected = false;
+            wokwiActiveNodes.clear();
+            if (operationalMode === 'MANUAL') {
+              for (const n in nodePower) nodePower[n] = false;
+            }
+            appendLog('[WOKWI HARDWARE]', 'Terminal engine has shut down. All nodes DISCONNECTED.', 'alert');
+            renderAllMapElements();
+          }
+        } else if (topic === 'mine/rover/position') {
+          if (data && typeof data.x === 'number' && typeof data.y === 'number') {
+            roverPos.x = Math.max(50, Math.min(950, Math.round(data.x)));
+            roverPos.y = Math.max(50, Math.min(400, Math.round(data.y)));
+            renderAllMapElements();
+            emitAutonomousMeshCycle(true);
+          }
+        } else if (topic === 'mine/rover/move') {
+          if (data && (data.dx !== undefined || data.dy !== undefined)) {
+            const dx = Number(data.dx) || 0;
+            const dy = Number(data.dy) || 0;
+            roverPos.x = Math.max(50, Math.min(950, roverPos.x + dx));
+            roverPos.y = Math.max(50, Math.min(400, roverPos.y + dy));
+            renderAllMapElements();
+            emitAutonomousMeshCycle(true);
+          }
+        } else if (topic.startsWith('node/status/')) {
+          const parts = topic.split('/');
+          const nodeName = parts[2];
+          if (nodeName && (nodePower.hasOwnProperty(nodeName) || nodeCoords.hasOwnProperty(nodeName))) {
+            const isOnline = (data && data.online !== undefined) ? !!data.online : true;
+            const wasState = !!nodePower[nodeName];
+            nodePower[nodeName] = isOnline;
+
+            if (isOnline) {
+              wokwiActiveNodes.add(nodeName);
+              isWokwiConnected = true;
+              isHardwareLive = true;
+              lastHardwarePacketTime = Date.now();
+            } else {
+              wokwiActiveNodes.delete(nodeName);
+            }
+
+            if (wasState !== isOnline) {
+              appendLog('[WOKWI HARDWARE]', `Node ${nodeName} ${isOnline ? 'CONNECTED SUCCESSFULLY' : 'DISCONNECTED'} via MQTT.`, isOnline ? 'fwd' : 'alert');
+              renderAllMapElements();
+            }
+          }
+        } else if (topic === 'mine/gateway/data') {
+          isHardwareLive = true;
+          lastHardwarePacketTime = Date.now();
+          isWokwiConnected = true;
+          nodePower.ROVER = true;
+          nodePower.GATEWAY = true;
+          wokwiActiveNodes.add('ROVER');
+          wokwiActiveNodes.add('GATEWAY');
+
+          if (data.path && typeof data.path === 'string') {
+            data.path.split('>').forEach(n => {
+              if (nodePower.hasOwnProperty(n) || nodeCoords.hasOwnProperty(n)) {
+                nodePower[n] = true;
+                wokwiActiveNodes.add(n);
+              }
+            });
+          }
+
+          handleDataPacket(data, false);
+          renderAllMapElements();
         } else if (topic === 'mine/gateway/alerts') {
           handleAlertPacket(data);
         } else if (topic === 'mine/gateway/node_health') {
+          // Check if shutdown packet (all nodes false or gateway false)
+          const allFalse = data.nodes && Object.values(data.nodes).every(v => !v);
+          if (data.gateway === false && allFalse) {
+            isHardwareLive = false;
+            isWokwiConnected = false;
+            wokwiActiveNodes.clear();
+            if (operationalMode === 'MANUAL') {
+              for (const n in nodePower) nodePower[n] = false;
+            }
+            appendLog('[WOKWI HARDWARE]', 'Terminal engine has shut down. All nodes DISCONNECTED.', 'alert');
+            renderAllMapElements();
+            return;
+          }
+
           if (data.nodes) {
+            isHardwareLive = true;
+            lastHardwarePacketTime = Date.now();
             for (const [n, active] of Object.entries(data.nodes)) {
-              if (nodePower.hasOwnProperty(n)) {
-                nodePower[n] = active;
+              if (nodePower.hasOwnProperty(n) || nodeCoords.hasOwnProperty(n)) {
+                nodePower[n] = !!active;
+                if (active) wokwiActiveNodes.add(n);
+                else wokwiActiveNodes.delete(n);
               }
             }
-            refreshTopologyAndRoute();
+            isWokwiConnected = (wokwiActiveNodes.size > 0);
+            renderAllMapElements();
           }
         }
       } catch (e) {}
     });
 
     // --- Telemetry Handler ---
-    function handleDataPacket(p) {
+    function handleDataPacket(p, isLocal = false) {
       lastPacketTime = Date.now();
       document.getElementById('topSeqDisplay').innerText = `#${p.seq || 0}`;
 
-      // Dynamic Safety Thresholds from Terminal simulator
+      // Dynamic Safety Thresholds from Simulator / Controls
       if (p.thresholds) {
         if (p.thresholds.methane_max !== undefined) {
           currentMethaneThreshold = parseFloat(p.thresholds.methane_max);
           const tDisp = document.getElementById('methaneThreshDisplay');
           if (tDisp) tDisp.innerText = `THRESHOLD: ${currentMethaneThreshold}% LEL`;
+          const ctrlThresh = document.getElementById('ctrlThreshValDisplay');
+          if (ctrlThresh) ctrlThresh.innerText = `CH4 >= ${currentMethaneThreshold.toFixed(1)}%`;
+          const sThresh = document.getElementById('sliderThresh');
+          if (sThresh) sThresh.value = currentMethaneThreshold;
         }
         if (p.thresholds.temp_max !== undefined) {
           currentTempThreshold = parseFloat(p.thresholds.temp_max);
@@ -1588,7 +2837,9 @@
         banner.style.display = 'none';
       }
 
-      appendLog(`[PACKET #${p.seq}]`, `Route: ${p.path} | Gas: ${p.methane}% | Flood: ${p.water} | Person: ${p.person}`, (p.alert === 1) ? 'alert' : 'normal');
+      const logPrefix = isLocal ? `[AUTO-TX #${p.seq}]` : `[MESH-RX #${p.seq}]`;
+      const pathLabel = (p.path === "ISOLATED") ? `<span style="color:var(--neon-red); font-weight:700;">ISOLATED (NO SURVIVING ROUTE)</span>` : p.path;
+      appendLog(logPrefix, `Route: ${pathLabel} | CH4: ${p.methane}% | Temp: ${p.temperature}°C | Flood: ${p.water} | Person: ${p.person}`, (p.alert === 1) ? 'alert' : (isLocal ? 'normal' : 'fwd'));
 
       // Refresh topology based on packet route or current graph
       refreshTopologyAndRoute();
@@ -1780,15 +3031,22 @@
       appendLog('[RESCUE]', 'Target location confirmed.', 'fwd');
     }
 
-    function updateGatewayBadge(online) {
+    function updateGatewayBadge(connected) {
       const pill = document.getElementById('gatewayStatusPill');
       const text = document.getElementById('gatewayStatusText');
-      if (online) {
+      if (!pill || !text) return;
+      const isMqttConnected = (typeof connected === 'boolean') ? connected : (client && client.connected);
+      const isGatewayPowerOn = !!nodePower.GATEWAY;
+
+      if (isMqttConnected && isGatewayPowerOn) {
         pill.className = 'status-pill';
         text.innerText = 'Base Station Online';
+      } else if (!isMqttConnected) {
+        pill.className = 'status-pill offline';
+        text.innerText = 'Base Station Standby';
       } else {
         pill.className = 'status-pill offline';
-        text.innerText = 'Base Station Offline';
+        text.innerText = 'Base Station Power Cut';
       }
     }
 
@@ -1806,45 +3064,56 @@
       document.getElementById('eventStreamBox').innerHTML = '';
     }
 
-    // Latency tick
+    // Latency tick & Wokwi hardware heartbeat monitor
     setInterval(() => {
+      const now = Date.now();
       if (lastPacketTime) {
-        const age = ((Date.now() - lastPacketTime) / 1000).toFixed(1);
-        document.getElementById('topLatencyDisplay').innerText = `${age}s`;
+        const ageSec = (now - lastPacketTime) / 1000;
+        document.getElementById('topLatencyDisplay').innerText = `${ageSec.toFixed(1)}s`;
+      }
+
+      // Check hardware heartbeat: if no packet from terminal/hardware for > 4s, mark hardware as disconnected
+      if (isHardwareLive && lastHardwarePacketTime && (now - lastHardwarePacketTime > 4000)) {
+        isHardwareLive = false;
+        isWokwiConnected = false;
+        wokwiActiveNodes.clear();
+        if (operationalMode === 'MANUAL') {
+          for (const n in nodePower) nodePower[n] = false;
+        }
+        appendLog('[WOKWI HARDWARE]', 'Wokwi hardware packet stream stopped. Gateway, Rover & Relays marked DISCONNECTED.', 'alert');
+        renderAllMapElements();
       }
     }, 1000);
 
-    // SVG Interactive Click, Drag & Mobile Touch Handlers
+    // SVG Interactive Click, Placement & Selection Handlers (Direct driving disabled)
     const svgEl = document.getElementById('tunnelSvg');
     if (svgEl) {
       svgEl.addEventListener('click', (e) => {
         const pt = getSvgCoordinates(e);
         if (isAddMode) {
           addRelayNodeAt(pt.x, pt.y);
-        } else if (!isDeleteMode && !isDraggingRover) {
-          driveRoverTo(pt.x, pt.y);
+        } else if (isDeleteMode) {
+          // Handled by individual node click handlers
+        } else {
+          if (operationalMode === 'AUTONOMOUS') {
+            appendLog('[ROVER NAV]', 'Rover is navigating autonomously on subterranean mine waypoints.', 'system');
+          } else {
+            appendLog('[ROVER NAV]', 'Dashboard direct driving is DISABLED. Use TERMINAL hotkeys (Arrows / IJKL in run_all_nodes.py) to drive Rover over MQTT.', 'alert');
+          }
         }
       });
 
       svgEl.addEventListener('mousemove', (e) => {
-        if (isDraggingRover) {
-          const pt = getSvgCoordinates(e);
-          driveRoverTo(pt.x, pt.y);
-        }
+        // Dragging disabled
       });
 
       window.addEventListener('mouseup', () => {
         isDraggingRover = false;
       });
 
-      // Mobile touch drag support
+      // Mobile touch support
       svgEl.addEventListener('touchmove', (e) => {
-        if (isDraggingRover && e.touches.length > 0) {
-          e.preventDefault();
-          const touch = e.touches[0];
-          const pt = getSvgCoordinates(touch);
-          driveRoverTo(pt.x, pt.y);
-        }
+        // Dragging disabled
       }, { passive: false });
 
       window.addEventListener('touchend', () => {
@@ -1852,8 +3121,21 @@
       });
     }
 
-    // Initial render of all subterranean map elements
+    // Initial render of all subterranean map elements (all nodes initially OFFLINE in STANDBY)
     renderAllMapElements();
+    updateModeVisuals();
+
+    // Autonomous Background Loop (only ticks when operationalMode === 'AUTONOMOUS' and autonomousEngineActive)
+    setInterval(() => {
+      if (operationalMode === 'AUTONOMOUS' && autonomousEngineActive) {
+        emitAutonomousMeshCycle(false);
+      }
+    }, 2200);
+
+    // Startup Announcement
+    setTimeout(() => {
+      appendLog('[SYSTEM STANDBY]', 'Manual / Wokwi Mode Active. All 8 mesh nodes are initially OFFLINE in standby. Start Wokwi simulation to link hardware, or switch to Autonomous mode.', 'system');
+    }, 200);
   </script>
 </body>
 </html>
