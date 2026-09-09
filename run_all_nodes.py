@@ -81,15 +81,15 @@ MAGENTA = "\033[38;5;141m"
 BLUE    = "\033[38;5;39m"
 DIM     = "\033[2m"
 
-# Mesh Topology Graph Definition (Neighbor list)
+# Full Redundant Mesh Topology Graph Definition (Neighbor list)
 ADJACENCY_GRAPH = {
-    "ROVER": ["R1A", "R1B"],
-    "R1A": ["R2"],
-    "R1B": ["R3"],
-    "R2": ["R4A", "R3", "R4B"],
-    "R3": ["R4B", "R2", "R4A"],
-    "R4A": ["GATEWAY"],
-    "R4B": ["GATEWAY"],
+    "ROVER": ["R1A", "R1B", "R2", "R3"],
+    "R1A": ["R2", "R3", "R1B"],
+    "R1B": ["R3", "R2", "R1A"],
+    "R2": ["R4A", "R4B", "R3", "R1A", "R1B"],
+    "R3": ["R4B", "R4A", "R2", "R1B", "R1A"],
+    "R4A": ["GATEWAY", "R4B", "R2", "R3"],
+    "R4B": ["GATEWAY", "R4A", "R3", "R2"],
     "GATEWAY": []
 }
 
